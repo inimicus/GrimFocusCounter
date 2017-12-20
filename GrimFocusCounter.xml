@@ -6,8 +6,12 @@
 		<TopLevelControl name="GrimFocusCounterIndicator" mouseEnabled="true" movable="true" clampedToScreen="true">
 			<Dimensions x="40" y="60" />
 			<Anchor point="BOTTOM" relativeTo="GuiRoot" relativePoint="CENTER" offsetY="-20" />
-
-			<Controls>
+      
+      <OnMoveStop>
+        GrimFocusCounter.OnMoveStop()
+      </OnMoveStop>
+			
+      <Controls>
 				<Label name="$(parent)Label" width="40" height="60" font="GrimFocusCounterH1" inheritAlpha="true" color="FFFFFF"
                     wrapMode="TRUNCATE" verticalAlignment="TOP" horizontalAlignment="CENTER" text="">
 					<Anchor point="TOP" relativeTo="$(parent)" relativePoint="TOP" />

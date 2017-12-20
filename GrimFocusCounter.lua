@@ -1,18 +1,40 @@
+-- -----------------------------------------------------------------------------
+-- Grim Focus Counter
+-- Author:  g4rr3t
+-- Created: Dec 20, 2017
+--
+-- Track stacks of Grim Focus and its morphs and display 
+-- the stacks in a very visual and obvious way.
+-- -----------------------------------------------------------------------------
 GrimFocusCounter = {}
 
-local addon = GrimFocusCounter
-addon.name = "GrimFocusCounter"
-addon.grim = "GrimFocusCounterRelentless"
-addon.relentless = "GrimFocusCounterRelentless"
-addon.merciless = "GrimFocusCounterMerciless"
-
--- ------------------------------
+-- -----------------------------------------------------------------------------
 -- Level of debug output
--- 1: Low - Basic debug info, make sure addon works
--- 2: Medium - More information about skills and addon functionality
+-- 1: Low - Basic debug info, show core functionality
+-- 2: Medium - More information about skills and addon details
 -- 3: High - Everything
-local debugMode = 3
--- ------------------------------
+local debugMode = 0
+-- -----------------------------------------------------------------------------
+
+local addon = GrimFocusCounter
+addon.name	= "GrimFocusCounter"
+
+-- Create separate namespaces for each morph
+addon.grim			= "GrimFocusCounterGrim"
+addon.relentless	= "GrimFocusCounterRelentless"
+addon.merciless		= "GrimFocusCounterMerciless"
+
+-- -----------------------------------------------------------------------------
+-- Base Skill IDs:
+-- Grim Focus			62096
+-- Merciless Resolve	62117
+-- Relentless Focus		62110
+-- -----------------------------------------------------------------------------
+local ABILITIES = {
+	GRIM_FOCUS			= 62097,	-- Unmorphed
+	MERCILESS_RESOLVE	= 62118,	-- Magicka Morph
+	RELENTLESS_FOCUS	= 62108,	-- Stamina Morph
+}
 
 local function Trace(debugLevel, ...)
 	if debugLevel <= debugMode then
@@ -20,35 +42,38 @@ local function Trace(debugLevel, ...)
 	end
 end
 
--- ------------------------------
--- Base Skill IDs:
--- Grim Focus				62096
--- Merciless Resolve		62117
--- Relentless Focus			62108
--- ------------------------------
-
-local ABILITIES = {
-	GRIM_FOCUS			= 62097,	-- Unmorphed
-	MERCILESS_RESOLVE	= 62118,	-- Magicka Morph
-	RELENTLESS_FOCUS	= 62110,	-- Stamina Morph
-}
+-- -----------------------------------------------------------------------------
+-- Startup
+-- -----------------------------------------------------------------------------
 
 function addon:Initialize()
 	Trace(1, "GFC Loaded")
+	self.preferences = ZO_SavedVars:NewAccountWide("GrimFocusCounterVariables", 1, nil, {})
+
+	local left	= self.preferences.positionLeft
+	local top	= self.preferences.positionTop
+
+	self:SetPosition(left, top)
 end
 
 function addon.OnLoaded(event, addonName)
-  if addonName == addon.name then
-    addon:Initialize()
-  end
+	if addonName == addon.name then
+		addon:Initialize()
+	end
 end
 
-function addon:OnEffectChanged(eventCode, changeType, effectSlot, effectName, unitTag,
-		startTimeSec, endTimeSec, stackCount, iconName, buffType, effectType, abilityType, 
-		statusEffectType, unitName, unitId, effectAbilityId)
+-- -----------------------------------------------------------------------------
+-- Stack Tracking
+-- -----------------------------------------------------------------------------
+
+function addon:OnEffectChanged(eventCode, changeType, effectSlot, effectName, 
+		unitTag, startTimeSec, endTimeSec, stackCount, iconName, buffType, 
+		effectType, abilityType, statusEffectType, unitName, unitId, 
+		effectAbilityId)
 
 	Trace(3, effectAbilityId)
 
+	-- Exclude abilities from group members
 	if unitTag and string.find(unitTag, 'group') then return end
 
     if stackCount > 0 then
@@ -72,14 +97,53 @@ function addon:OnEffectChanged(eventCode, changeType, effectSlot, effectName, un
 
 end
 
+-- -----------------------------------------------------------------------------
+-- User Interface
+-- -----------------------------------------------------------------------------
+
+function addon:OnMoveStop()
+	Trace(1, "Moved")
+	addon.SavePosition()
+end
+
+function addon.SavePosition()
+	local left	= GrimFocusCounterIndicator:GetLeft()
+	local top	= GrimFocusCounterIndicator:GetTop()
+
+	Trace(2, "Saving - Left: "..left.." Top: "..top)
+
+	addon.preferences.positionLeft = left
+	addon.preferences.positionTop = top
+end
+
+function addon:SetPosition(left, top)
+	Trace(2, "Setting - Left: "..left.." Top: "..top)
+	GrimFocusCounterIndicator:ClearAnchors()
+	GrimFocusCounterIndicator:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, left, top)
+end
+
+-- -----------------------------------------------------------------------------
+-- Event Hooks
+-- -----------------------------------------------------------------------------
+
 EVENT_MANAGER:RegisterForEvent(addon.name, EVENT_ADD_ON_LOADED, addon.OnLoaded)
 
+-- Events for each skill morph
+-- Separate namespaces for each are required as 
+-- duplicate filters against the same namespace
+-- overwrite the previously set filter.
+--
+-- These filter the EVENT_EFFECT_CHANGED event to
+-- hit the callback *only* when the three specific 
+-- ability IDs change and avoid the need to conditionally 
+-- exclude all skills we are not interested in.
+
 EVENT_MANAGER:RegisterForEvent(addon.merciless, EVENT_EFFECT_CHANGED, function(...) addon:OnEffectChanged(...) end)
-EVENT_MANAGER:AddFilterForEvent(addon.merciless, EVENT_EFFECT_CHANGED, REGISTER_FILTER_ABILITY_ID, ABILITIES.MERCILESS_RESOLE)
+EVENT_MANAGER:AddFilterForEvent(addon.merciless, EVENT_EFFECT_CHANGED, REGISTER_FILTER_ABILITY_ID, ABILITIES.MERCILESS_RESOLVE)
 EVENT_MANAGER:AddFilterForEvent(addon.merciless, EVENT_EFFECT_CHANGED, REGISTER_FILTER_SOURCE_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_PLAYER)
 
 EVENT_MANAGER:RegisterForEvent(addon.relentless, EVENT_EFFECT_CHANGED, function(...) addon:OnEffectChanged(...) end)
-EVENT_MANAGER:AddFilterForEvent(addon.relentless, EVENT_EFFECT_CHANGED, REGISTER_FILTER_ABILITY_ID, ABILITIES.GRIM_FOCUS)
+EVENT_MANAGER:AddFilterForEvent(addon.relentless, EVENT_EFFECT_CHANGED, REGISTER_FILTER_ABILITY_ID, ABILITIES.RELENTLESS_FOCUS)
 EVENT_MANAGER:AddFilterForEvent(addon.relentless, EVENT_EFFECT_CHANGED, REGISTER_FILTER_SOURCE_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_PLAYER)
 
 EVENT_MANAGER:RegisterForEvent(addon.grim, EVENT_EFFECT_CHANGED, function(...) addon:OnEffectChanged(...) end)
