@@ -1,11 +1,10 @@
 # Grim Focus Counter (BETA)
 
-Track stacks of Grim Focus and its morphs and display 
-the stacks in a very visual and obvious way.
+Track stacks of Grim Focus and its morphs and displays
+them in a visual and obvious way.
 
 ![Grim Focus Counter in Action](GrimFocusCounter.gif)
-
-_* Note: Not final art._
+_* Note: Not final artwork._
 
 ## Purpose
 _But there are already buff trackers that display how many 
@@ -43,6 +42,7 @@ Grim Focus (or its morphs), just for the unique stacking mechanic.
 ## Planned Features
 - Robust settings menu
 - Varied and unique display styles (current implementation non-final)
+- Support for Lock/unlock of display element with more intuitive positioning
 - Customization of colors, sizes, and more
 
 ## Feedback & Contributing
