@@ -1,0 +1,9 @@
+## Title: Grim Focus Counter
+## APIVersion: 100020
+## SavedVariables: GrimFocusCounterVariables
+## Description: Displays stacks of Grim Focus (and its morphs) by |cFFCCCCg4rr3t|r.
+## Version: 0.0.1
+## Author: g4rr3t
+
+GrimFocusCounter.xml
+GrimFocusCounter.lua
