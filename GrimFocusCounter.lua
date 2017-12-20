@@ -56,7 +56,7 @@ function addon:Initialize()
 	self:SetPosition(left, top)
 end
 
-function addon.OnLoaded(event, addonName)
+function addon:OnLoaded(event, addonName)
 	if addonName == addon.name then
 		addon:Initialize()
 	end
@@ -103,17 +103,17 @@ end
 
 function addon:OnMoveStop()
 	Trace(1, "Moved")
-	addon.SavePosition()
+	addon:SavePosition()
 end
 
-function addon.SavePosition()
+function addon:SavePosition()
 	local left	= GrimFocusCounterIndicator:GetLeft()
 	local top	= GrimFocusCounterIndicator:GetTop()
 
 	Trace(2, "Saving - Left: "..left.." Top: "..top)
 
-	addon.preferences.positionLeft = left
-	addon.preferences.positionTop = top
+	self.preferences.positionLeft = left
+	self.preferences.positionTop = top
 end
 
 function addon:SetPosition(left, top)
@@ -126,7 +126,7 @@ end
 -- Event Hooks
 -- -----------------------------------------------------------------------------
 
-EVENT_MANAGER:RegisterForEvent(addon.name, EVENT_ADD_ON_LOADED, addon.OnLoaded)
+EVENT_MANAGER:RegisterForEvent(addon.name, EVENT_ADD_ON_LOADED, function(...) addon:OnLoaded(...) end)
 
 -- Events for each skill morph
 -- Separate namespaces for each are required as 
