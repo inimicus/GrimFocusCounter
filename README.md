@@ -3,8 +3,10 @@
 Track stacks of Grim Focus and its morphs and displays
 them in a visual and obvious way.
 
-![Grim Focus Counter in Action](GrimFocusCounter.gif)
-_* Note: Not final artwork._
+<p align="center">
+    <img src="https://github.com/inimicus/GrimFocusCounter/blob/master/GrimFocusCounter.gif?raw=true"><br>
+    <em><strong>Note: Not final artwork.</strong></em>
+</p>
 
 ## Purpose
 _But there are already buff trackers that display how many 
