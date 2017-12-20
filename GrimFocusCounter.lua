@@ -17,29 +17,29 @@ local debugMode = 0
 -- -----------------------------------------------------------------------------
 
 local addon = GrimFocusCounter
-addon.name	= "GrimFocusCounter"
+addon.name  = "GrimFocusCounter"
 
 -- Create separate namespaces for each morph
-addon.grim			= "GrimFocusCounterGrim"
-addon.relentless	= "GrimFocusCounterRelentless"
-addon.merciless		= "GrimFocusCounterMerciless"
+addon.grim          = "GrimFocusCounterGrim"
+addon.relentless    = "GrimFocusCounterRelentless"
+addon.merciless     = "GrimFocusCounterMerciless"
 
 -- -----------------------------------------------------------------------------
 -- Base Skill IDs:
--- Grim Focus			62096
--- Merciless Resolve	62117
--- Relentless Focus		62110
+-- Grim Focus           62096
+-- Merciless Resolve    62117
+-- Relentless Focus     62110
 -- -----------------------------------------------------------------------------
 local ABILITIES = {
-	GRIM_FOCUS			= 62097,	-- Unmorphed
-	MERCILESS_RESOLVE	= 62118,	-- Magicka Morph
-	RELENTLESS_FOCUS	= 62108,	-- Stamina Morph
+    GRIM_FOCUS          = 62097,    -- Unmorphed
+    MERCILESS_RESOLVE   = 62118,    -- Magicka Morph
+    RELENTLESS_FOCUS    = 62108,    -- Stamina Morph
 }
 
 local function Trace(debugLevel, ...)
-	if debugLevel <= debugMode then
-		d(...)
-	end
+    if debugLevel <= debugMode then
+        d(...)
+    end
 end
 
 -- -----------------------------------------------------------------------------
@@ -47,19 +47,19 @@ end
 -- -----------------------------------------------------------------------------
 
 function addon:Initialize()
-	Trace(1, "GFC Loaded")
-	self.preferences = ZO_SavedVars:NewAccountWide("GrimFocusCounterVariables", 1, nil, {})
+    Trace(1, "GFC Loaded")
+    self.preferences = ZO_SavedVars:NewAccountWide("GrimFocusCounterVariables", 1, nil, {})
 
-	local left	= self.preferences.positionLeft
-	local top	= self.preferences.positionTop
+    local left  = self.preferences.positionLeft
+    local top   = self.preferences.positionTop
 
-	self:SetPosition(left, top)
+    self:SetPosition(left, top)
 end
 
 function addon:OnLoaded(event, addonName)
-	if addonName == addon.name then
-		addon:Initialize()
-	end
+    if addonName == addon.name then
+        addon:Initialize()
+    end
 end
 
 -- -----------------------------------------------------------------------------
@@ -67,30 +67,30 @@ end
 -- -----------------------------------------------------------------------------
 
 function addon:OnEffectChanged(eventCode, changeType, effectSlot, effectName, 
-		unitTag, startTimeSec, endTimeSec, stackCount, iconName, buffType, 
-		effectType, abilityType, statusEffectType, unitName, unitId, 
-		effectAbilityId)
+        unitTag, startTimeSec, endTimeSec, stackCount, iconName, buffType, 
+        effectType, abilityType, statusEffectType, unitName, unitId, 
+        effectAbilityId)
 
-	Trace(3, effectAbilityId)
+    Trace(3, effectAbilityId)
 
-	-- Exclude abilities from group members
-	if unitTag and string.find(unitTag, 'group') then return end
+    -- Exclude abilities from group members
+    if unitTag and string.find(unitTag, 'group') then return end
 
     if stackCount > 0 then
-		Trace(3, "Stack for "..effectAbilityId)
+        Trace(3, "Stack for "..effectAbilityId)
         if changeType == EFFECT_RESULT_FADED then
-			GrimFocusCounterIndicatorLabel:SetText("")
-			Trace(2, "Faded on stack #"..stackCount)
+            GrimFocusCounterIndicatorLabel:SetText("")
+            Trace(2, "Faded on stack #"..stackCount)
         else
-			local displayText = ""
+            local displayText = ""
 
-			for i = 1, stackCount, 1
-			do
-				displayText = displayText .. "*"
-			end
+            for i = 1, stackCount, 1
+            do
+                displayText = displayText .. "*"
+            end
 
-			GrimFocusCounterIndicatorLabel:SetText(displayText)
-			Trace(1, "Stack #"..stackCount)
+            GrimFocusCounterIndicatorLabel:SetText(displayText)
+            Trace(1, "Stack #"..stackCount)
         end
         return
     end
@@ -102,24 +102,24 @@ end
 -- -----------------------------------------------------------------------------
 
 function addon:OnMoveStop()
-	Trace(1, "Moved")
-	addon:SavePosition()
+    Trace(1, "Moved")
+    addon:SavePosition()
 end
 
 function addon:SavePosition()
-	local left	= GrimFocusCounterIndicator:GetLeft()
-	local top	= GrimFocusCounterIndicator:GetTop()
+    local left  = GrimFocusCounterIndicator:GetLeft()
+    local top   = GrimFocusCounterIndicator:GetTop()
 
-	Trace(2, "Saving - Left: "..left.." Top: "..top)
+    Trace(2, "Saving - Left: "..left.." Top: "..top)
 
-	self.preferences.positionLeft = left
-	self.preferences.positionTop = top
+    self.preferences.positionLeft = left
+    self.preferences.positionTop = top
 end
 
 function addon:SetPosition(left, top)
-	Trace(2, "Setting - Left: "..left.." Top: "..top)
-	GrimFocusCounterIndicator:ClearAnchors()
-	GrimFocusCounterIndicator:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, left, top)
+    Trace(2, "Setting - Left: "..left.." Top: "..top)
+    GrimFocusCounterIndicator:ClearAnchors()
+    GrimFocusCounterIndicator:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, left, top)
 end
 
 -- -----------------------------------------------------------------------------
@@ -149,3 +149,4 @@ EVENT_MANAGER:AddFilterForEvent(addon.relentless, EVENT_EFFECT_CHANGED, REGISTER
 EVENT_MANAGER:RegisterForEvent(addon.grim, EVENT_EFFECT_CHANGED, function(...) addon:OnEffectChanged(...) end)
 EVENT_MANAGER:AddFilterForEvent(addon.grim, EVENT_EFFECT_CHANGED, REGISTER_FILTER_ABILITY_ID, ABILITIES.GRIM_FOCUS)
 EVENT_MANAGER:AddFilterForEvent(addon.grim, EVENT_EFFECT_CHANGED, REGISTER_FILTER_SOURCE_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_PLAYER)
+
