@@ -34,8 +34,8 @@ local ABILITIES = {
 }
 
 local TEXTURE_SIZE = {
-    DISPLAY_WIDTH   = 50,   -- Default width
-    DISPLAY_HEIGHT  = 50,   -- Default height
+    DISPLAY_WIDTH   = 40,   -- Default width
+    DISPLAY_HEIGHT  = 40,   -- Default height
     FRAME_HEIGHT    = 128,  -- Height of each texture frame
     FRAME_WIDTH     = 128,  -- Width of each texture frame
     ASSET_WIDTH     = 1024, -- Overall texture width
@@ -43,7 +43,9 @@ local TEXTURE_SIZE = {
 }
 
 local TEXTURE_VARIANTS = {
-    COLOR_SQUARES = "GrimFocusCounter/assets/ColorSquares.dds",
+    COLOR_SQUARES       = "GrimFocusCounter/assets/ColorSquares.dds",
+    DOOM                = "GrimFocusCounter/assets/Doom.dds",
+    HORIZONTAL_DOTS     = "GrimFocusCounter/assets/HorizontalDots.dds",
 }
 
 local TEXTURE_FRAMES = {
@@ -54,7 +56,7 @@ local TEXTURE_FRAMES = {
     [4] = { ABS = 512,  REL = 0.5 },	-- Stack #4
     [5] = { ABS = 640,  REL = 0.625 },	-- Stack #5
     [6] = { ABS = 768,  REL = 0.75 },	-- Empty stack indicator
-    [7] = { ABS = 896,  REL = 0.875 },	-- Skill active inidicator
+    [7] = { ABS = 896,  REL = 0.875 },	-- Skill active indicator
     [8] = { ABS = 1024, REL = 1.0 },	-- End of texture
 }
 
@@ -71,7 +73,8 @@ end
 function addon:Initialize()
     Trace(1, "GFC Loaded")
     self.preferences = ZO_SavedVars:NewAccountWide("GrimFocusCounterVariables", 1, nil, {})
-	self.preferences.showEmptyStacks = false
+	self.preferences.showEmptyStacks = true
+	self.preferences.selectedTexture = TEXTURE_VARIANTS.HORIZONTAL_DOTS
     self:DrawUI()
 
 	-- Events for each skill morph
@@ -203,7 +206,7 @@ function addon:DrawUI()
 	c:SetHandler("OnMoveStop", function(...) self:SavePosition() end)
 
 	local t = WINDOW_MANAGER:CreateControl("GFCTexture", c, CT_TEXTURE)
-	t:SetTexture(TEXTURE_VARIANTS.COLOR_SQUARES)
+	t:SetTexture(self.preferences.selectedTexture)
 	t:SetDimensions(TEXTURE_SIZE.DISPLAY_WIDTH, TEXTURE_SIZE.DISPLAY_HEIGHT)
     t:SetTextureCoords(TEXTURE_FRAMES[0].REL, TEXTURE_FRAMES[1].REL, 0, 1)
 	t:SetAnchor(TOPLEFT, c, TOPLEFT, 0, 0)
