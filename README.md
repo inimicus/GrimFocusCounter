@@ -42,10 +42,8 @@ Grim Focus (or its morphs), just for the unique stacking mechanic.
 	- To move, stack one or more times, enter cursor mode and drag into position
 
 ## Planned Features
-- Robust settings menu
 - Varied and unique display styles (current implementation non-final)
-- Support for Lock/unlock of display element with more intuitive positioning
-- Customization of colors, sizes, and more
+- Customization of colors, variants, and more
 
 ## Feedback & Contributing
 If you'd like to provide feedback, drop me a mail in-game to
