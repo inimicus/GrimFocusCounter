@@ -28,21 +28,23 @@ for those who need a more obvious cue, don't run other buff
 trackers, or enjoy filling their screen with flair.
 
 ## Functionality
-The stack display does not appear until the first stack, 
-avoiding screen clutter while out of combat. Each stack will 
-appear as they happen and disappears when the buff expires or
-the proc is used.
+The stack display can be configured to not appear until the first
+stack occurs or upon activation of the skill. Each stack will update
+the display as they happen and returns to a zero state or disappears
+when the buff expires or the proc is used -- depending on selected options.
 
 This add-on is _not_ intended to be a tracker for uptime on 
 Grim Focus (or its morphs), just for the unique stacking mechanic.
 
 ## Implemented Features
 - Tracks Grim Focus, Merciless Resolve, Relentless Focus stacks
-- Movable stack display to any place on the screen
-	- To move, stack one or more times, enter cursor mode and drag into position
+- Select from different display styles
+- Customizable size
+- Movable to any place on the screen
+- Optionally show zero stacks
 
 ## Planned Features
-- Varied and unique display styles (current implementation non-final)
+- More varied, unique and clean display styles (current implementation non-final)
 - Customization of colors, variants, and more
 
 ## Feedback & Contributing
