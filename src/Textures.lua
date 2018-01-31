@@ -26,6 +26,14 @@ GFC.TEXTURE_VARIANTS = {
         name    = "Horizontal Dots",
         asset   = "GrimFocusCounter/art/textures/HorizontalDots.dds",
     },
+    [3] = {
+        name    = "Numbers",
+        asset   = "GrimFocusCounter/art/textures/Numbers.dds",
+    },
+    [4] = {
+        name    = "Dice",
+        asset   = "GrimFocusCounter/art/textures/Dice.dds",
+    },
 }
 
 GFC.TEXTURE_FRAMES = {
