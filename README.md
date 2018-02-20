@@ -1,11 +1,10 @@
-# Grim Focus Counter (BETA)
+# Grim Focus Counter
 
 Track stacks of Grim Focus and its morphs and displays
 them in a visual and obvious way.
 
 <p align="center">
-    <img src="https://github.com/inimicus/GrimFocusCounter/blob/master/GrimFocusCounter.gif?raw=true"><br>
-    <em><strong>Note: Not final artwork.</strong></em>
+    <img src="https://github.com/inimicus/GrimFocusCounter/blob/master/art/GrimFocusCounter.gif?raw=true"><br>
 </p>
 
 ## Purpose
