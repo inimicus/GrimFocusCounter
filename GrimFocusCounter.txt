@@ -6,14 +6,6 @@
 ## Author: |cFFCCCC@g4rr3t|r
 ## OptionalDependsOn:  LibAddonMenu-2.0
 
-src/Main.lua
-src/Textures.lua
-src/Defaults.lua
-src/Abilities.lua
-src/Settings.lua
-src/Tracking.lua
-src/Interface.lua
-
 lib/LibStub/LibStub.lua
 lib/LibAddonMenu-2.0/LibAddonMenu-2.0.lua
 lib/LibAddonMenu-2.0/controls/panel.lua
@@ -30,3 +22,11 @@ lib/LibAddonMenu-2.0/controls/slider.lua
 lib/LibAddonMenu-2.0/controls/texture.lua
 lib/LibAddonMenu-2.0/controls/iconpicker.lua
 lib/LibAddonMenu-2.0/controls/divider.lua
+
+src/Main.lua
+src/Textures.lua
+src/Defaults.lua
+src/Abilities.lua
+src/Settings.lua
+src/Tracking.lua
+src/Interface.lua
