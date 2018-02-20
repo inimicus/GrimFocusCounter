@@ -34,6 +34,10 @@ GFC.TEXTURE_VARIANTS = {
         name    = "Dice",
         asset   = "GrimFocusCounter/art/textures/Dice.dds",
     },
+    [5] = {
+        name    = "Play Magsorc",
+        asset   = "GrimFocusCounter/art/textures/PlayMagsorc.dds",
+    },
 }
 
 GFC.TEXTURE_FRAMES = {
