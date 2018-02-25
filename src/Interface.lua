@@ -98,23 +98,26 @@ function GFC.UpdateStacks(stackCount)
     -- Ignore missing stackCount
     if not stackCount then return end
 
-    if stackCount == 0 and GFC.preferences.showEmptyStacks then
-        
-        if GFC.abilityActive then
-            -- Show zero stack indicator
-            GFC:Trace(1, "Stack #0, Show Empty, Active Skill")
-            GFC.GFCTexture:SetTextureCoords(GFC.TEXTURE_FRAMES[6].REL, GFC.TEXTURE_FRAMES[7].REL, 0, 1)
-        else
-            -- Hide stack indicator
-            GFC:Trace(1, "Stack #0, Show Empty, Inactive Skill")
-            GFC.GFCTexture:SetTextureCoords(GFC.TEXTURE_FRAMES[0].REL, GFC.TEXTURE_FRAMES[1].REL, 0, 1)
-        end
+    if stackCount > 0 then
 
-    else
+        -- Show stacks
         GFC:Trace(1, "Stack #" .. stackCount)
         GFC.GFCTexture:SetTextureCoords(GFC.TEXTURE_FRAMES[stackCount].REL, GFC.TEXTURE_FRAMES[stackCount+1].REL, 0, 1)
-    end
 
+    else
+
+        -- Show zero stack indicator for active ability
+        if GFC.preferences.showEmptyStacks and GFC.abilityActive then
+            GFC:Trace(1, "Stack #0 (Show Empty)")
+            GFC.GFCTexture:SetTextureCoords(GFC.TEXTURE_FRAMES[6].REL, GFC.TEXTURE_FRAMES[7].REL, 0, 1)
+            return
+        end
+
+        -- Skill dead or do not show empty stacks
+        GFC:Trace(1, "Skill inactive or don't show empty stacks")
+        GFC.GFCTexture:SetTextureCoords(GFC.TEXTURE_FRAMES[0].REL, GFC.TEXTURE_FRAMES[1].REL, 0, 1)
+
+    end
 end
 
 function GFC.SlashCommand(command)
