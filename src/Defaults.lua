@@ -13,7 +13,7 @@ local defaults = {
     positionTop = 600,
     size = 40,
     unlocked = true,
-    lockedToReticle = true,
+    lockedToReticle = false,
 }
 
 function GFC:GetDefaults()
