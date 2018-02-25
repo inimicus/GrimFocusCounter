@@ -50,6 +50,17 @@ function GFC.ToggleHUD()
     end)
 end
 
+function GFC.LockToReticle(lockToReticle)
+    if lockToReticle then
+        GFC.preferences.lockedToReticle = true
+        GFC:Trace(1, "Locked to Reticle")
+    else
+        GFC.preferences.lockedToReticle = false
+        GFC:Trace(1, "Unlocked from Reticle")
+    end
+    GFC.SetPosition(GFC.preferences.positionLeft, GFC.preferences.positionTop)
+end
+
 function GFC.OnMoveStop()
     GFC:Trace(1, "Moved")
     GFC.SavePosition()
@@ -59,6 +70,10 @@ function GFC.SavePosition()
     local top   = GFC.GFCContainer:GetTop()
     local left  = GFC.GFCContainer:GetLeft()
 
+    -- If locked to reticle, but unlocked and moved,
+    -- then we are no longer locked to reticle.
+    GFC.preferences.lockedToReticle = false
+
     GFC:Trace(2, "Saving position - Left: " .. left .. " Top: " .. top)
 
     GFC.preferences.positionLeft = left
@@ -66,9 +81,16 @@ function GFC.SavePosition()
 end
 
 function GFC.SetPosition(left, top)
-    GFC:Trace(2, "Setting - Left: " .. left .. " Top: " .. top)
-    GFC.GFCContainer:ClearAnchors()
-    GFC.GFCContainer:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, left, top)
+    if GFC.preferences.lockedToReticle then
+        local height = GuiRoot:GetHeight()
+
+        GFC.GFCContainer:ClearAnchors()
+        GFC.GFCContainer:SetAnchor(CENTER, GuiRoot, TOP, 0, height/2)
+    else
+        GFC:Trace(2, "Setting - Left: " .. left .. " Top: " .. top)
+        GFC.GFCContainer:ClearAnchors()
+        GFC.GFCContainer:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, left, top)
+    end
 end
 
 function GFC.UpdateStacks(stackCount)

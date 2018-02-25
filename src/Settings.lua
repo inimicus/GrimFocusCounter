@@ -32,13 +32,20 @@ local optionsTable = {
     },
     [3] = {
         type = "button",
-        --name = "Toggle Show",
         name = function() if GFC.ForceShow then return "Hide" else return "Show" end end,
         tooltip = "Force show for position or previewing display settings.",
         func = function(control) ForceShow(control) end,
         width = "half",
     },
     [4] = {
+        type = "checkbox",
+        name = "Lock to Reticle",
+        tooltip = "Snap display of counter to center of reticle. Some display options may appear better than others positioned this way.",
+        getFunc = function() return GetLockReticle() end,
+        setFunc = function(value) SetLockReticle(value) end,
+        width = "full",
+    },
+    [5] = {
         type = "dropdown",
         name = "Counter Style",
         tooltip = "Style of counter display.",
@@ -48,17 +55,17 @@ local optionsTable = {
         setFunc = function(texture) SetTexture(texture) end,
         width = "full",
     },
-	[5] = {
-		type = "description",
-		text = "",
-		width = "half",
-	},
-	[6] = {
-		type = "description",
-		text = "All styles are a work in progress, non-final, and very rough.",
-		width = "half",
-	},
+    [6] = {
+        type = "description",
+        text = "",
+        width = "half",
+    },
     [7] = {
+        type = "description",
+        text = "Many styles are a work in progress.",
+        width = "half",
+    },
+    [8] = {
         type = "slider",
         name = "Display Size",
         tooltip = "Display size of counter.",
@@ -70,7 +77,7 @@ local optionsTable = {
         width = "full",
         default = 40,
     },
-    [8] = {
+    [9] = {
         type = "checkbox",
         name = "Show Zero Stacks",
         tooltip = "Show when skill is active but no stacks tracked.",
@@ -79,16 +86,16 @@ local optionsTable = {
         setFunc = function(value) SetZeroStacks(value) end,
         width = "full",
     },
-	[9] = {
-		type = "description",
-		text = "",
-		width = "half",
-	},
-	[10] = {
-		type = "description",
-		text = "Not all display styles currently include indicators for zero stacks.",
-		width = "half",
-	},
+    [10] = {
+        type = "description",
+        text = "",
+        width = "half",
+    },
+    [11] = {
+        type = "description",
+        text = "Not all display styles currently include indicators for zero stacks.",
+        width = "half",
+    },
 }
 
 -- -----------------------------------------------------------------------------
@@ -101,25 +108,34 @@ function ToggleLocked(control)
     GFC.GFCContainer:SetMovable(GFC.preferences.unlocked)
     if GFC.preferences.unlocked then
         control:SetText("Lock")
-    else 
+    else
         control:SetText("Unlock")
-    end 
+    end
 end
 
 -- Force Showing
 function ForceShow(control)
-	GFC.ForceShow = not GFC.ForceShow
+    GFC.ForceShow = not GFC.ForceShow
     if GFC.ForceShow then
         control:SetText("Hide")
-		GFC.HUDHidden = false
-		GFC.GFCContainer:SetHidden(false)
-		GFC.UpdateStacks(5)
-    else 
+        GFC.HUDHidden = false
+        GFC.GFCContainer:SetHidden(false)
+        GFC.UpdateStacks(5)
+    else
         control:SetText("Show")
-		GFC.HUDHidden = true
-		GFC.GFCContainer:SetHidden(true)
-		GFC.UpdateStacks(0)
-    end 
+        GFC.HUDHidden = true
+        GFC.GFCContainer:SetHidden(true)
+        GFC.UpdateStacks(0)
+    end
+end
+
+-- Lock to Reticle
+function SetLockReticle(value)
+    GFC.LockToReticle(value)
+end
+
+function GetLockReticle(value)
+    return GFC.preferences.lockedToReticle
 end
 
 -- Textures
