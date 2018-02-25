@@ -38,6 +38,14 @@ GFC.TEXTURE_VARIANTS = {
         name    = "Play Magsorc",
         asset   = "GrimFocusCounter/art/textures/PlayMagsorc.dds",
     },
+    [6] = {
+        name    = "Red Compass (by Porkjet)",
+        asset   = "GrimFocusCounter/art/textures/CH01_red.dds",
+    },
+    [7] = {
+        name    = "Mono Compass (by Porkjet)",
+        asset   = "GrimFocusCounter/art/textures/CH01_BW.dds",
+    },
 }
 
 GFC.TEXTURE_FRAMES = {
