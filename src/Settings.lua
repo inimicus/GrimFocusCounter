@@ -20,7 +20,7 @@ local panelData = {
 local optionsTable = {
     [1] = {
         type = "header",
-        name = "Display Options",
+        name = "Positioning",
         width = "full",
     },
     [2] = {
@@ -81,7 +81,6 @@ local optionsTable = {
         type = "checkbox",
         name = "Show Zero Stacks",
         tooltip = "Show when skill is active but no stacks tracked.",
-        requiresReload = true,
         getFunc = function() return GetZeroStacks() end,
         setFunc = function(value) SetZeroStacks(value) end,
         width = "full",
@@ -92,9 +91,28 @@ local optionsTable = {
         width = "half",
     },
     [11] = {
-        type = "description",
-        text = "Not all display styles currently include indicators for zero stacks.",
-        width = "half",
+        type = "header",
+        name = "Advanced Options",
+        width = "full",
+    },
+    [12] = {
+        type = "checkbox",
+        name = "Fade on Skill Inactive",
+        tooltip = "Lower opacity when stacks exist and in combat, but buff has expired.",
+        getFunc = function() return GetFade() end,
+        setFunc = function(value) SetFade(value) end,
+        width = "full",
+    },
+    [13] = {
+        type = "slider",
+        name = "Fade Amount",
+        tooltip = "Opacity of inactive skill with counted stacks",
+        min = 0,
+        max = 100,
+        getFunc = function() return GetFadeAmount() end,
+        setFunc = function(value) SetFadeAmount(value) end,
+        width = "full",
+        default = 90,
     },
 }
 
@@ -169,6 +187,29 @@ function GetZeroStacks()
 end
 
 
+-- Fade
+function SetFade(value)
+    -- Note: To avoid having to change alpha every time,
+    -- even if we never wanted to fade in the first place,
+    -- turning OFF the option must first SetSkillFade(false)
+    -- before setting preferences.fadeInactive to false.
+    -- Otherwise we may get stuck in a faded state.
+    GFC.SetSkillFade(value)
+    GFC.preferences.fadeInactive = value
+end
+
+function GetFade()
+    return GFC.preferences.fadeInactive
+end
+
+function SetFadeAmount(value)
+    GFC.preferences.fadeAmount = value
+    GFC.SetSkillFade()
+end
+
+function GetFadeAmount()
+    return GFC.preferences.fadeAmount
+end
 -- -----------------------------------------------------------------------------
 -- Initialize Settings
 -- -----------------------------------------------------------------------------

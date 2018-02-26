@@ -49,6 +49,7 @@ function GFC.OnEffectChanged(eventCode, changeType, effectSlot, effectName,
     if changeType == EFFECT_RESULT_GAINED then
         GFC:Trace(2, "Skill Activated: " ..  effectAbilityId)
         GFC.abilityActive = true
+        GFC.SetSkillFade(false)
         GFC.UpdateStacks(currentStack)
         return
     end
@@ -56,6 +57,7 @@ function GFC.OnEffectChanged(eventCode, changeType, effectSlot, effectName,
     if changeType == EFFECT_RESULT_FADED then
         GFC:Trace(2, "Skill Inactive: " ..  effectAbilityId)
         GFC.abilityActive = false
+        GFC.SetSkillFade(true)
         GFC.UpdateStacks(currentStack)
         return
     end

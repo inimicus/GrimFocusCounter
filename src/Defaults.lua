@@ -14,6 +14,8 @@ local defaults = {
     size = 40,
     unlocked = true,
     lockedToReticle = false,
+    fadeInactive = false,
+    fadeAmount = 90,
 }
 
 function GFC:GetDefaults()

@@ -27,6 +27,16 @@ function GFC.DrawUI()
     GFC.GFCTexture = t
 
     GFC.SetPosition(GFC.preferences.positionLeft, GFC.preferences.positionTop)
+function GFC.SetSkillFade(faded) 
+    -- Only change fade if our options want us to fade
+    if GFC.preferences.fadeInactive then
+        if faded then
+            alpha = GFC.preferences.fadeAmount / 100
+            GFC.GFCContainer:SetAlpha(alpha)
+        else
+            GFC.GFCContainer:SetAlpha(1)
+        end
+    end
 end
 
 function GFC.ToggleHUD()
