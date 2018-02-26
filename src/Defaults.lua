@@ -7,6 +7,7 @@
 -- -----------------------------------------------------------------------------
 
 local defaults = {
+    debugMode = 0,
     showEmptyStacks = false,
     selectedTexture = 2,
     positionLeft = 800,

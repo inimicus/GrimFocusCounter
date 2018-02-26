@@ -17,6 +17,14 @@ function GFC.DrawUI()
     c:SetHidden(false)
     c:SetHandler("OnMoveStop", function(...) GFC.SavePosition() end)
 
+    -- Check for valid texture
+    -- Potential fix for UI error discovered by Porkjet
+    if not GFC.TEXTURE_VARIANTS[GFC.preferences.selectedTexture] then
+        -- If texture selection is not a valid option, reset to default
+        GFC:Trace(1, 'Invalid texture selection: ' .. GFC.preferences.selectedTexture)
+        GFC.preferences.selectedTexture = GFC:GetDefaults().selectedTexture
+    end
+
     local t = WINDOW_MANAGER:CreateControl("GFCTexture", c, CT_TEXTURE)
     t:SetTexture(GFC.TEXTURE_VARIANTS[GFC.preferences.selectedTexture].asset)
     t:SetDimensions(GFC.preferences.size, GFC.preferences.size)
@@ -151,15 +159,19 @@ function GFC.SlashCommand(command)
     if command == "debug 0" then
         d(GFC.prefix .. "Setting debug level to 0 (Off)")
         GFC.debugMode = 0
+        GFC.preferences.debugMode = 0
     elseif command == "debug 1" then
         d(GFC.prefix .. "Setting debug level to 1 (Low)")
         GFC.debugMode = 1
+        GFC.preferences.debugMode = 1
     elseif command == "debug 2" then
         d(GFC.prefix .. "Setting debug level to 2 (Medium)")
         GFC.debugMode = 2
+        GFC.preferences.debugMode = 2
     elseif command == "debug 3" then
         d(GFC.prefix .. "Setting debug level to 3 (High)")
         GFC.debugMode = 3
+        GFC.preferences.debugMode = 3
     else
         d(GFC.prefix .. "Command not recognized!")
     end

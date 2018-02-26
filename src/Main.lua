@@ -38,10 +38,15 @@ end
 function GFC.Initialize(event, addonName)
     if addonName ~= GFC.name then return end
 
+    -- First trace uses above debugMode value 
+    -- until preferences are loaded
     GFC:Trace(1, "GFC Loaded")
     EVENT_MANAGER:UnregisterForEvent(GFC.name, EVENT_ADD_ON_LOADED)
 
     GFC.preferences = ZO_SavedVars:NewAccountWide("GrimFocusCounterVariables", GFC.dbVersion, nil, GFC:GetDefaults())
+
+    -- Use saved debugMode value
+    GFC.debugMode = GFC.preferences.debugMode
 
     SLASH_COMMANDS[GFC.slash] = GFC.SlashCommand
 
