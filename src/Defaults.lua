@@ -8,7 +8,7 @@
 
 local defaults = {
     showEmptyStacks = false,
-    selectedTexture = 1,
+    selectedTexture = 2,
     positionLeft = 800,
     positionTop = 600,
     size = 40,
