@@ -65,6 +65,29 @@ local optionsTable = {
         setFunc = function(texture) SetTexture(texture) end,
         width = "full",
     },
+    --[[
+    [7] = {
+        type = "iconpicker",
+        name = "Counter Style",
+        choices = {
+            "GrimFocusCounter/art/textures/HorizontalDots.dds",
+            "GrimFocusCounter/art/textures/ColorSquares.dds",
+            "esoui/art/icons/class/class_nightblade.dds",
+            "esoui/art/icons/class/class_sorcerer.dds",
+            "esoui/art/icons/class/class_templar.dds",
+            "esoui/art/icons/class/class_warden.dds",
+        },
+        getFunc = function() return 0 end,
+        setFunc = function(var) d(var) end,
+        tooltip = "Style of counter display.",
+        choicesTooltips = {"icon tooltip 1", "icon tooltip 2", "icon tooltip 3", "icon tooptip 4", "icon tooptip 4", "icon tooptip 4", "icon tooptip 4", "icon tooptip 4", "icon tooptip 4"}, -- or array of string ids or array of functions returning a string (optional)
+        maxColumns = 2,
+        visibleRows = 2.5,
+        iconSize = 128,
+        width = "full",
+        --beforeShow = function(control, iconPicker) return preventShow end, --(optional)
+    },
+    ]]
     [8] = {
         type = "slider",
         name = "Display Size",
@@ -130,6 +153,27 @@ local optionsTable = {
         tooltip = "Color used for color overlay above.",
         getFunc = function() return GetColor() end,
         setFunc = function(r, g, b, a) SetColor(r, g, b, a) end,
+    },
+    [16] = {
+        type = "submenu",
+        name = "Acknowledgements",
+        controls = {
+            [1] = {
+                type = "description",
+                text = "|cBCBCBC|u0:40::Porkjet|u|rCreator of Red Compass and Mono Compass textures",
+                width = "full",
+            },
+            [2] = {
+                type = "description",
+                text = "|cBCBCBC|u0:40::aquamantom|u|rHomeowner of primary facility for testing, parsing and AFKing",
+                width = "full",
+            },
+            [3] = {
+                type = "description",
+                text = "|cBCBCBC|u0:40::Vierron|u|rAdditional blind-people perspective, testing and input",
+                width = "full",
+            },
+        },
     },
 }
 
