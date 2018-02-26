@@ -14,6 +14,13 @@ local defaults = {
     size = 40,
     unlocked = true,
     lockedToReticle = false,
+    colorOverlay = false,
+    color = {
+        r = 1,
+        g = 1,
+        b = 1,
+        a = 1,
+    },
     fadeInactive = false,
     fadeAmount = 90,
 }

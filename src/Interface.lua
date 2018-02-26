@@ -27,6 +27,23 @@ function GFC.DrawUI()
     GFC.GFCTexture = t
 
     GFC.SetPosition(GFC.preferences.positionLeft, GFC.preferences.positionTop)
+    GFC.SetSkillColorOverlay()
+end
+
+function GFC.SetSkillColorOverlay() 
+
+    -- Read saved color
+    color = GFC.preferences.color
+
+    if GFC.preferences.colorOverlay then
+        -- Set active color overlay
+        GFC.GFCTexture:SetColor(color.r, color.g, color.b, color.a)
+    else
+        -- Set to white AKA none
+        GFC.GFCTexture:SetColor(1, 1, 1, 1)
+    end
+end
+
 function GFC.SetSkillFade(faded) 
     -- Only change fade if our options want us to fade
     if GFC.preferences.fadeInactive then

@@ -46,6 +46,16 @@ local optionsTable = {
         width = "full",
     },
     [5] = {
+        type = "header",
+        name = "Style",
+        width = "full",
+    },
+    [6] = {
+        type = "description",
+        text = "Many styles are a work in progress.",
+        width = "full",
+    },
+    [7] = {
         type = "dropdown",
         name = "Counter Style",
         tooltip = "Style of counter display.",
@@ -54,16 +64,6 @@ local optionsTable = {
         getFunc = function() return GetTexture() end,
         setFunc = function(texture) SetTexture(texture) end,
         width = "full",
-    },
-    [6] = {
-        type = "description",
-        text = "",
-        width = "half",
-    },
-    [7] = {
-        type = "description",
-        text = "Many styles are a work in progress.",
-        width = "half",
     },
     [8] = {
         type = "slider",
@@ -87,8 +87,8 @@ local optionsTable = {
     },
     [10] = {
         type = "description",
-        text = "",
-        width = "half",
+        text = "Not all display styles currently include indicators for zero stacks.",
+        width = "full",
     },
     [11] = {
         type = "header",
@@ -113,6 +113,21 @@ local optionsTable = {
         setFunc = function(value) SetFadeAmount(value) end,
         width = "full",
         default = 90,
+    },
+    [14] = {
+        type = "checkbox",
+        name = "Color Overlay",
+        tooltip = "Overlay a texture with a provided color. Works better on some textures than others.",
+        getFunc = function() return GetColorOverlay() end,
+        setFunc = function(value) SetColorOverlay(value) end,
+        width = "full",
+    },
+    [15] = {
+        type = "colorpicker",
+        name = "Color Overlay",
+        tooltip = "Color used for color overlay above.",
+        getFunc = function() return GetColor() end,
+        setFunc = function(r, g, b, a) SetColor(r, g, b, a) end,
     },
 }
 
@@ -186,6 +201,29 @@ function GetZeroStacks()
     return GFC.preferences.showEmptyStacks
 end
 
+-- Color Overlay
+function SetColorOverlay(value)
+    GFC.preferences.colorOverlay = value
+    GFC.SetSkillColorOverlay()
+end
+
+function GetColorOverlay()
+    return GFC.preferences.colorOverlay
+end
+
+function SetColor(r, g, b, a)
+    GFC.preferences.color = {
+        r = r,
+        g = g,
+        b = b,
+        a = a,
+    }
+    GFC.SetSkillColorOverlay()
+end
+
+function GetColor()
+    return GFC.preferences.color.r, GFC.preferences.color.g, GFC.preferences.color.b, GFC.preferences.color.a
+end
 
 -- Fade
 function SetFade(value)
