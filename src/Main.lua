@@ -22,7 +22,7 @@ GFC.ForceShow   = false
 -- 1: Low    - Basic debug info, show core functionality
 -- 2: Medium - More information about skills and addon details
 -- 3: High   - Everything
-GFC.debugMode = 0
+GFC.debugMode = 1
 -- -----------------------------------------------------------------------------
 
 function GFC:Trace(debugLevel, ...)
@@ -38,8 +38,17 @@ end
 function GFC.Initialize(event, addonName)
     if addonName ~= GFC.name then return end
 
-    -- First trace uses above debugMode value 
-    -- until preferences are loaded
+    -- First trace uses above debugMode value until preferences are loaded.
+    -- The only way these two messages will appear is by changing the above
+    -- value to greater than 0.
+    -- Since these are only used during dev and QA, it should not impact
+    -- any user functionality or features.
+    if GetUnitClassId("player") ~= 3 then
+        GFC:Trace(1, "Non-nightblade class detected, aborting addon initialization.")
+        EVENT_MANAGER:UnregisterForEvent(GFC.name, EVENT_ADD_ON_LOADED)
+        return
+    end
+
     GFC:Trace(1, "GFC Loaded")
     EVENT_MANAGER:UnregisterForEvent(GFC.name, EVENT_ADD_ON_LOADED)
 
