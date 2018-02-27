@@ -17,6 +17,14 @@ function GFC.DrawUI()
     c:SetHidden(false)
     c:SetHandler("OnMoveStop", function(...) GFC.SavePosition() end)
 
+    -- Check for valid texture
+    -- Potential fix for UI error discovered by Porkjet
+    if not GFC.TEXTURE_VARIANTS[GFC.preferences.selectedTexture] then
+        -- If texture selection is not a valid option, reset to default
+        GFC:Trace(1, 'Invalid texture selection: ' .. GFC.preferences.selectedTexture)
+        GFC.preferences.selectedTexture = GFC:GetDefaults().selectedTexture
+    end
+
     local t = WINDOW_MANAGER:CreateControl("GFCTexture", c, CT_TEXTURE)
     t:SetTexture(GFC.TEXTURE_VARIANTS[GFC.preferences.selectedTexture].asset)
     t:SetDimensions(GFC.preferences.size, GFC.preferences.size)
@@ -27,6 +35,33 @@ function GFC.DrawUI()
     GFC.GFCTexture = t
 
     GFC.SetPosition(GFC.preferences.positionLeft, GFC.preferences.positionTop)
+    GFC.SetSkillColorOverlay()
+end
+
+function GFC.SetSkillColorOverlay() 
+
+    -- Read saved color
+    color = GFC.preferences.color
+
+    if GFC.preferences.colorOverlay then
+        -- Set active color overlay
+        GFC.GFCTexture:SetColor(color.r, color.g, color.b, color.a)
+    else
+        -- Set to white AKA none
+        GFC.GFCTexture:SetColor(1, 1, 1, 1)
+    end
+end
+
+function GFC.SetSkillFade(faded) 
+    -- Only change fade if our options want us to fade
+    if GFC.preferences.fadeInactive then
+        if faded then
+            alpha = GFC.preferences.fadeAmount / 100
+            GFC.GFCContainer:SetAlpha(alpha)
+        else
+            GFC.GFCContainer:SetAlpha(1)
+        end
+    end
 end
 
 function GFC.ToggleHUD()
@@ -50,6 +85,17 @@ function GFC.ToggleHUD()
     end)
 end
 
+function GFC.LockToReticle(lockToReticle)
+    if lockToReticle then
+        GFC.preferences.lockedToReticle = true
+        GFC:Trace(1, "Locked to Reticle")
+    else
+        GFC.preferences.lockedToReticle = false
+        GFC:Trace(1, "Unlocked from Reticle")
+    end
+    GFC.SetPosition(GFC.preferences.positionLeft, GFC.preferences.positionTop)
+end
+
 function GFC.OnMoveStop()
     GFC:Trace(1, "Moved")
     GFC.SavePosition()
@@ -59,6 +105,10 @@ function GFC.SavePosition()
     local top   = GFC.GFCContainer:GetTop()
     local left  = GFC.GFCContainer:GetLeft()
 
+    -- If locked to reticle, but unlocked and moved,
+    -- then we are no longer locked to reticle.
+    GFC.preferences.lockedToReticle = false
+
     GFC:Trace(2, "Saving position - Left: " .. left .. " Top: " .. top)
 
     GFC.preferences.positionLeft = left
@@ -66,9 +116,16 @@ function GFC.SavePosition()
 end
 
 function GFC.SetPosition(left, top)
-    GFC:Trace(2, "Setting - Left: " .. left .. " Top: " .. top)
-    GFC.GFCContainer:ClearAnchors()
-    GFC.GFCContainer:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, left, top)
+    if GFC.preferences.lockedToReticle then
+        local height = GuiRoot:GetHeight()
+
+        GFC.GFCContainer:ClearAnchors()
+        GFC.GFCContainer:SetAnchor(CENTER, GuiRoot, TOP, 0, height/2)
+    else
+        GFC:Trace(2, "Setting - Left: " .. left .. " Top: " .. top)
+        GFC.GFCContainer:ClearAnchors()
+        GFC.GFCContainer:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, left, top)
+    end
 end
 
 function GFC.UpdateStacks(stackCount)
@@ -76,38 +133,45 @@ function GFC.UpdateStacks(stackCount)
     -- Ignore missing stackCount
     if not stackCount then return end
 
-    if stackCount == 0 and GFC.preferences.showEmptyStacks then
-        
-        if GFC.abilityActive then
-            -- Show zero stack indicator
-            GFC:Trace(1, "Stack #0, Show Empty, Active Skill")
-            GFC.GFCTexture:SetTextureCoords(GFC.TEXTURE_FRAMES[6].REL, GFC.TEXTURE_FRAMES[7].REL, 0, 1)
-        else
-            -- Hide stack indicator
-            GFC:Trace(1, "Stack #0, Show Empty, Inactive Skill")
-            GFC.GFCTexture:SetTextureCoords(GFC.TEXTURE_FRAMES[0].REL, GFC.TEXTURE_FRAMES[1].REL, 0, 1)
-        end
+    if stackCount > 0 then
 
-    else
+        -- Show stacks
         GFC:Trace(1, "Stack #" .. stackCount)
         GFC.GFCTexture:SetTextureCoords(GFC.TEXTURE_FRAMES[stackCount].REL, GFC.TEXTURE_FRAMES[stackCount+1].REL, 0, 1)
-    end
 
+    else
+
+        -- Show zero stack indicator for active ability
+        if GFC.preferences.showEmptyStacks and GFC.abilityActive then
+            GFC:Trace(1, "Stack #0 (Show Empty)")
+            GFC.GFCTexture:SetTextureCoords(GFC.TEXTURE_FRAMES[6].REL, GFC.TEXTURE_FRAMES[7].REL, 0, 1)
+            return
+        end
+
+        -- Skill dead or do not show empty stacks
+        GFC:Trace(1, "Skill inactive or don't show empty stacks")
+        GFC.GFCTexture:SetTextureCoords(GFC.TEXTURE_FRAMES[0].REL, GFC.TEXTURE_FRAMES[1].REL, 0, 1)
+
+    end
 end
 
 function GFC.SlashCommand(command)
     if command == "debug 0" then
         d(GFC.prefix .. "Setting debug level to 0 (Off)")
         GFC.debugMode = 0
+        GFC.preferences.debugMode = 0
     elseif command == "debug 1" then
         d(GFC.prefix .. "Setting debug level to 1 (Low)")
         GFC.debugMode = 1
+        GFC.preferences.debugMode = 1
     elseif command == "debug 2" then
         d(GFC.prefix .. "Setting debug level to 2 (Medium)")
         GFC.debugMode = 2
+        GFC.preferences.debugMode = 2
     elseif command == "debug 3" then
         d(GFC.prefix .. "Setting debug level to 3 (High)")
         GFC.debugMode = 3
+        GFC.preferences.debugMode = 3
     else
         d(GFC.prefix .. "Command not recognized!")
     end

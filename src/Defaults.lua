@@ -7,12 +7,23 @@
 -- -----------------------------------------------------------------------------
 
 local defaults = {
+    debugMode = 0,
     showEmptyStacks = false,
-    selectedTexture = 1,
+    selectedTexture = 2,
     positionLeft = 800,
     positionTop = 600,
-    size = 40,
+    size = 100,
     unlocked = true,
+    lockedToReticle = false,
+    colorOverlay = false,
+    color = {
+        r = 1,
+        g = 1,
+        b = 1,
+        a = 1,
+    },
+    fadeInactive = false,
+    fadeAmount = 90,
 }
 
 function GFC:GetDefaults()
