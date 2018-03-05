@@ -36,6 +36,8 @@ function GFC.DrawUI()
 
     GFC.SetPosition(GFC.preferences.positionLeft, GFC.preferences.positionTop)
     GFC.SetSkillColorOverlay()
+
+    GFC:Trace(2, "Finished DrawUI()")
 end
 
 function GFC.SetSkillColorOverlay() 
@@ -73,16 +75,20 @@ function GFC.ToggleHUD()
 
         -- Transitioning to a menu/non-HUD
         if newState == SCENE_HIDDEN and SCENE_MANAGER:GetNextScene():GetName() ~= "hudui" then
+            GFC:Trace(3, "Hiding HUD")
             GFC.HUDHidden = true
             GFC.GFCContainer:SetHidden(true)
         end
 
         -- Transitioning to a HUD/non-menu
         if newState == SCENE_SHOWING then
+            GFC:Trace(3, "Showing HUD")
             GFC.HUDHidden = false
             GFC.GFCContainer:SetHidden(false)
         end
     end)
+
+    GFC:Trace(2, "Finished ToggleHUD()")
 end
 
 function GFC.LockToReticle(lockToReticle)

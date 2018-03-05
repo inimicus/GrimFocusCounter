@@ -99,6 +99,7 @@ function GFC.Initialize(event, addonName)
 	EVENT_MANAGER:AddFilterForEvent(GFC.ABILITIES.GRIM_FOCUS.SKILL.NAME, EVENT_EFFECT_CHANGED, REGISTER_FILTER_ABILITY_ID, GFC.ABILITIES.GRIM_FOCUS.SKILL.ID)
 	EVENT_MANAGER:AddFilterForEvent(GFC.ABILITIES.GRIM_FOCUS.SKILL.NAME, EVENT_EFFECT_CHANGED, REGISTER_FILTER_SOURCE_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_PLAYER)
 
+    GFC:Trace(2, "Finished Initialize()")
 end
 
 -- -----------------------------------------------------------------------------
