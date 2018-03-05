@@ -19,10 +19,12 @@ declare -a systemExclude=(
     "*.DS_Store"
 )
 declare -a fileExclude=(
-    "art/GrimFocusCounter.gif"
+    "art/gifs/*"
+    "art/gifs/**/*"
     "README.md"
     "makePackage.sh"
     "release/*"
+    "release/**/*"
 )
 
 # Prepend excludes with directory path
