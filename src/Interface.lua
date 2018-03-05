@@ -162,6 +162,7 @@ function GFC.UpdateStacks(stackCount)
 end
 
 function GFC.SlashCommand(command)
+    -- Debug Options ----------------------------------------------------------
     if command == "debug 0" then
         d(GFC.prefix .. "Setting debug level to 0 (Off)")
         GFC.debugMode = 0
@@ -178,6 +179,28 @@ function GFC.SlashCommand(command)
         d(GFC.prefix .. "Setting debug level to 3 (High)")
         GFC.debugMode = 3
         GFC.preferences.debugMode = 3
+
+    -- Position Options -------------------------------------------------------
+    elseif command == "position reset" then
+        d(GFC.prefix .. "Resetting position to reticle")
+        local tempPos = GFC.preferences.lockedToReticle
+        GFC.preferences.lockedToReticle = true
+        GFC.SetPosition()
+        GFC.preferences.lockedToReticle = tempPos
+    elseif command == "position show" then
+        d(GFC.prefix .. "Display position is set to: [" .. 
+            GFC.preferences.positionTop .. 
+            ", " ..
+            GFC.preferences.positionLeft .. 
+            "]")
+    elseif command == "position lock" then
+        d(GFC.prefix .. "Locking display")
+        GFC.preferences.unlocked = false
+        GFC.GFCContainer:SetMovable(false)
+    elseif command == "position unlock" then
+        d(GFC.prefix .. "Unlocking display")
+        GFC.preferences.unlocked = true
+        GFC.GFCContainer:SetMovable(true)
     else
         d(GFC.prefix .. "Command not recognized!")
     end
