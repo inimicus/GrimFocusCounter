@@ -36,6 +36,8 @@ function GFC.DrawUI()
 
     GFC.SetPosition(GFC.preferences.positionLeft, GFC.preferences.positionTop)
     GFC.SetSkillColorOverlay()
+
+    GFC:Trace(2, "Finished DrawUI()")
 end
 
 function GFC.SetSkillColorOverlay() 
@@ -73,16 +75,20 @@ function GFC.ToggleHUD()
 
         -- Transitioning to a menu/non-HUD
         if newState == SCENE_HIDDEN and SCENE_MANAGER:GetNextScene():GetName() ~= "hudui" then
+            GFC:Trace(3, "Hiding HUD")
             GFC.HUDHidden = true
             GFC.GFCContainer:SetHidden(true)
         end
 
         -- Transitioning to a HUD/non-menu
         if newState == SCENE_SHOWING then
+            GFC:Trace(3, "Showing HUD")
             GFC.HUDHidden = false
             GFC.GFCContainer:SetHidden(false)
         end
     end)
+
+    GFC:Trace(2, "Finished ToggleHUD()")
 end
 
 function GFC.LockToReticle(lockToReticle)
@@ -156,6 +162,7 @@ function GFC.UpdateStacks(stackCount)
 end
 
 function GFC.SlashCommand(command)
+    -- Debug Options ----------------------------------------------------------
     if command == "debug 0" then
         d(GFC.prefix .. "Setting debug level to 0 (Off)")
         GFC.debugMode = 0
@@ -172,6 +179,28 @@ function GFC.SlashCommand(command)
         d(GFC.prefix .. "Setting debug level to 3 (High)")
         GFC.debugMode = 3
         GFC.preferences.debugMode = 3
+
+    -- Position Options -------------------------------------------------------
+    elseif command == "position reset" then
+        d(GFC.prefix .. "Resetting position to reticle")
+        local tempPos = GFC.preferences.lockedToReticle
+        GFC.preferences.lockedToReticle = true
+        GFC.SetPosition()
+        GFC.preferences.lockedToReticle = tempPos
+    elseif command == "position show" then
+        d(GFC.prefix .. "Display position is set to: [" .. 
+            GFC.preferences.positionTop .. 
+            ", " ..
+            GFC.preferences.positionLeft .. 
+            "]")
+    elseif command == "position lock" then
+        d(GFC.prefix .. "Locking display")
+        GFC.preferences.unlocked = false
+        GFC.GFCContainer:SetMovable(false)
+    elseif command == "position unlock" then
+        d(GFC.prefix .. "Unlocking display")
+        GFC.preferences.unlocked = true
+        GFC.GFCContainer:SetMovable(true)
     else
         d(GFC.prefix .. "Command not recognized!")
     end

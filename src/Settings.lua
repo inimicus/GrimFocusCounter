@@ -301,5 +301,7 @@ end
 function GFC:InitSettings()
     LAM:RegisterAddonPanel(GFC.name, panelData)
     LAM:RegisterOptionControls(GFC.name, optionsTable)
+
+    GFC:Trace(2, "Finished InitSettings()")
 end
 
