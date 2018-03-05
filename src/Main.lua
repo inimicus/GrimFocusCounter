@@ -22,7 +22,7 @@ GFC.ForceShow   = false
 -- 1: Low    - Basic debug info, show core functionality
 -- 2: Medium - More information about skills and addon details
 -- 3: High   - Everything
-GFC.debugMode = 1
+GFC.debugMode = 0
 -- -----------------------------------------------------------------------------
 
 function GFC:Trace(debugLevel, ...)
