@@ -142,7 +142,6 @@ function GFC.UpdateStacks(stackCount)
     if stackCount > 0 then
 
         -- Show stacks
-        GFC:Trace(1, "Stack #" .. stackCount)
         GFC.GFCTexture:SetTextureCoords(GFC.TEXTURE_FRAMES[stackCount].REL, GFC.TEXTURE_FRAMES[stackCount+1].REL, 0, 1)
 
     else

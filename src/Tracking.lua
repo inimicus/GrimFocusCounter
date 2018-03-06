@@ -59,7 +59,7 @@ function GFC.OnEffectChanged(eventCode, changeType, effectSlot, effectName,
 
     -- If we have a stack
     if stackCount > 0 then
-        GFC:Trace(3, "Stack for " .. effectAbilityId)
+        GFC:Trace(2, "Stack for Ability ID: " .. effectAbilityId)
         if changeType == EFFECT_RESULT_FADED then
             currentStack = 0
             GFC.UpdateStacks(currentStack)
@@ -67,7 +67,7 @@ function GFC.OnEffectChanged(eventCode, changeType, effectSlot, effectName,
         else
             currentStack = stackCount
             GFC.UpdateStacks(currentStack)
-            GFC:Trace(2, "Stack #"..stackCount)
+            GFC:Trace(1, "Stack #"..stackCount)
         end
         return
     end
