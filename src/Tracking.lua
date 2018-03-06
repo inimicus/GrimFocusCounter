@@ -21,20 +21,28 @@ function GFC.RegisterEvents()
     -- exclude all skills we are not interested in.
 
     for morph, morphValue in pairs(GFC.ABILITIES) do
-        for skillType, skillValue in pairs(morphValue) do
-            GFC:Trace(2, "Registering: " .. morph .. " (" .. skillType .. ": " .. skillValue.ID .. ")")
-            EVENT_MANAGER:RegisterForEvent(skillValue.NAME, EVENT_EFFECT_CHANGED, function(...) GFC.OnEffectChanged(...) end)
-            EVENT_MANAGER:AddFilterForEvent(skillValue.NAME, EVENT_EFFECT_CHANGED, REGISTER_FILTER_ABILITY_ID, skillValue.ID)
-            EVENT_MANAGER:AddFilterForEvent(skillValue.NAME, EVENT_EFFECT_CHANGED, REGISTER_FILTER_SOURCE_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_PLAYER)
+        GFC:Trace(2, "Registering: " .. morph)
+        for rank, rankValue in pairs(morphValue) do
+            for key, value in pairs(rankValue) do
+                local name = "GFC_" .. morph .. "_" .. rank .. "_" .. key
+                --d(value)
+                GFC:Trace(3, "Registering: " .. name .. " (" .. value .. ")")
+                EVENT_MANAGER:RegisterForEvent(name, EVENT_EFFECT_CHANGED, function(...) GFC.OnEffectChanged(...) end)
+                EVENT_MANAGER:AddFilterForEvent(name, EVENT_EFFECT_CHANGED, REGISTER_FILTER_ABILITY_ID, value)
+                EVENT_MANAGER:AddFilterForEvent(name, EVENT_EFFECT_CHANGED, REGISTER_FILTER_SOURCE_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_PLAYER)
+            end
         end
     end
 end
 
 function GFC.UnregisterEvents()
     for morph, morphValue in pairs(GFC.ABILITIES) do
-        for skillType, skillValue in pairs(morphValue) do
-            GFC:Trace(2, "Unregistering: " .. morph .. " (" .. skillType .. ": " .. skillValue.ID .. ")")
-            EVENT_MANAGER:UnregisterForEvent(skillValue.NAME, EVENT_EFFECT_CHANGED)
+        for rank, rankValue in pairs(morphValue) do
+            for key, value in pairs(rankValue) do
+                local name = "GFC_" .. morph .. "_" .. rank .. "_" .. key
+                GFC:Trace(3, "Unregistering: " .. name .. " (" .. value .. ")")
+                EVENT_MANAGER:UnregisterForEvent(name, EVENT_EFFECT_CHANGED)
+            end
         end
     end
 end
