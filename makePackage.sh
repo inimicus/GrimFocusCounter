@@ -7,10 +7,10 @@ addon=${PWD##*/}
 outDir="${addon}/release/"
 
 # Get version number
-version=`cat GrimFocusCounter.txt | grep "## Version" | awk '{print $3}'`
+version=`cat GrimFocusCounter.txt | grep "## Version" | sed 's/.*: //'`
 
 # Setup zip file name
-zipName="${addon}-${version}.zip"
+zipName="${addon}-${version/ /_}.zip"
 
 # Files to exclude
 exclude=""
@@ -19,10 +19,12 @@ declare -a systemExclude=(
     "*.DS_Store"
 )
 declare -a fileExclude=(
-    "art/GrimFocusCounter.gif"
+    "art/gifs/*"
+    "art/gifs/**/*"
     "README.md"
     "makePackage.sh"
     "release/*"
+    "release/**/*"
 )
 
 # Prepend excludes with directory path

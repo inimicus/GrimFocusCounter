@@ -40,7 +40,7 @@ function GFC.DrawUI()
     GFC:Trace(2, "Finished DrawUI()")
 end
 
-function GFC.SetSkillColorOverlay() 
+function GFC.SetSkillColorOverlay()
 
     -- Read saved color
     color = GFC.preferences.color
@@ -54,7 +54,7 @@ function GFC.SetSkillColorOverlay()
     end
 end
 
-function GFC.SetSkillFade(faded) 
+function GFC.SetSkillFade(faded)
     -- Only change fade if our options want us to fade
     if GFC.preferences.fadeInactive then
         if faded then
@@ -142,7 +142,6 @@ function GFC.UpdateStacks(stackCount)
     if stackCount > 0 then
 
         -- Show stacks
-        GFC:Trace(1, "Stack #" .. stackCount)
         GFC.GFCTexture:SetTextureCoords(GFC.TEXTURE_FRAMES[stackCount].REL, GFC.TEXTURE_FRAMES[stackCount+1].REL, 0, 1)
 
     else
@@ -188,10 +187,10 @@ function GFC.SlashCommand(command)
         GFC.SetPosition()
         GFC.preferences.lockedToReticle = tempPos
     elseif command == "position show" then
-        d(GFC.prefix .. "Display position is set to: [" .. 
-            GFC.preferences.positionTop .. 
+        d(GFC.prefix .. "Display position is set to: [" ..
+            GFC.preferences.positionTop ..
             ", " ..
-            GFC.preferences.positionLeft .. 
+            GFC.preferences.positionLeft ..
             "]")
     elseif command == "position lock" then
         d(GFC.prefix .. "Locking display")
@@ -201,6 +200,31 @@ function GFC.SlashCommand(command)
         d(GFC.prefix .. "Unlocking display")
         GFC.preferences.unlocked = true
         GFC.GFCContainer:SetMovable(true)
+
+    -- Manage Registration ----------------------------------------------------
+    elseif command == "register" then
+        d(GFC.prefix .. "Reregistering all events")
+        GFC.UnregisterEvents()
+        GFC.RegisterEvents()
+    elseif command == "unregister" then
+        d(GFC.prefix .. "Unregistering all events")
+        GFC.UnregisterEvents()
+        GFC.abilityActive = false
+        GFC.UpdateStacks(0)
+    elseif command == "register unfiltered" then
+        d(GFC.prefix .. "Unregistering all events")
+        GFC.UnregisterEvents()
+        GFC.abilityActive = false
+        GFC.UpdateStacks(0)
+        d(GFC.prefix .. "Registering for ALL events unfiltered")
+        GFC.RegisterUnfilteredEvents()
+    elseif command == "unregister unfiltered" then
+        d(GFC.prefix .. "Unregistering unfiltered events")
+        GFC.UnregisterUnfilteredEvents()
+        GFC.abilityActive = false
+        GFC.UpdateStacks(0)
+
+    -- Default ----------------------------------------------------------------
     else
         d(GFC.prefix .. "Command not recognized!")
     end
