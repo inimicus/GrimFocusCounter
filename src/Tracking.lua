@@ -47,6 +47,16 @@ function GFC.UnregisterEvents()
     end
 end
 
+function GFC.RegisterUnfilteredEvents()
+    EVENT_MANAGER:RegisterForEvent(GFC.name, EVENT_EFFECT_CHANGED, function(...) GFC.OnEffectChanged(...) end)
+    GFC:Trace(3, "Registering unfiltered complete")
+end
+
+function GFC.UnregisterUnfilteredEvents()
+    EVENT_MANAGER:UnregisterForEvent(GFC.name, EVENT_EFFECT_CHANGED)
+    GFC:Trace(3, "Unregistering unfiltered complete")
+end
+
 function GFC.OnEffectChanged(eventCode, changeType, effectSlot, effectName,
         unitTag, startTimeSec, endTimeSec, stackCount, iconName, buffType,
         effectType, abilityType, statusEffectType, unitName, unitId,

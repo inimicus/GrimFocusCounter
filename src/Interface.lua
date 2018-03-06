@@ -211,6 +211,18 @@ function GFC.SlashCommand(command)
         GFC.UnregisterEvents()
         GFC.abilityActive = false
         GFC.UpdateStacks(0)
+    elseif command == "register unfiltered" then
+        d(GFC.prefix .. "Unregistering all events")
+        GFC.UnregisterEvents()
+        GFC.abilityActive = false
+        GFC.UpdateStacks(0)
+        d(GFC.prefix .. "Registering for ALL events unfiltered")
+        GFC.RegisterUnfilteredEvents()
+    elseif command == "unregister unfiltered" then
+        d(GFC.prefix .. "Unregistering unfiltered events")
+        GFC.UnregisterUnfilteredEvents()
+        GFC.abilityActive = false
+        GFC.UpdateStacks(0)
 
     -- Default ----------------------------------------------------------------
     else
