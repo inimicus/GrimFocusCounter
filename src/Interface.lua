@@ -201,6 +201,19 @@ function GFC.SlashCommand(command)
         d(GFC.prefix .. "Unlocking display")
         GFC.preferences.unlocked = true
         GFC.GFCContainer:SetMovable(true)
+
+    -- Manage Registration ----------------------------------------------------
+    elseif command == "register" then
+        d(GFC.prefix .. "Reregistering all events")
+        GFC.UnregisterEvents()
+        GFC.RegisterEvents()
+    elseif command == "unregister" then
+        d(GFC.prefix .. "Unregistering all events")
+        GFC.UnregisterEvents()
+        GFC.abilityActive = false
+        GFC.UpdateStacks(0)
+
+    -- Default ----------------------------------------------------------------
     else
         d(GFC.prefix .. "Command not recognized!")
     end
