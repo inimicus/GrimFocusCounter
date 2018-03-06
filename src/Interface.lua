@@ -40,7 +40,7 @@ function GFC.DrawUI()
     GFC:Trace(2, "Finished DrawUI()")
 end
 
-function GFC.SetSkillColorOverlay() 
+function GFC.SetSkillColorOverlay()
 
     -- Read saved color
     color = GFC.preferences.color
@@ -54,7 +54,7 @@ function GFC.SetSkillColorOverlay()
     end
 end
 
-function GFC.SetSkillFade(faded) 
+function GFC.SetSkillFade(faded)
     -- Only change fade if our options want us to fade
     if GFC.preferences.fadeInactive then
         if faded then
@@ -188,10 +188,10 @@ function GFC.SlashCommand(command)
         GFC.SetPosition()
         GFC.preferences.lockedToReticle = tempPos
     elseif command == "position show" then
-        d(GFC.prefix .. "Display position is set to: [" .. 
-            GFC.preferences.positionTop .. 
+        d(GFC.prefix .. "Display position is set to: [" ..
+            GFC.preferences.positionTop ..
             ", " ..
-            GFC.preferences.positionLeft .. 
+            GFC.preferences.positionLeft ..
             "]")
     elseif command == "position lock" then
         d(GFC.prefix .. "Locking display")
