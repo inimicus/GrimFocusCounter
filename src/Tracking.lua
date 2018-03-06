@@ -39,6 +39,7 @@ function GFC.UnregisterEvents()
     end
 end
 
+function GFC.OnEffectChanged(eventCode, changeType, effectSlot, effectName,
         unitTag, startTimeSec, endTimeSec, stackCount, iconName, buffType,
         effectType, abilityType, statusEffectType, unitName, unitId,
         effectAbilityId)
@@ -62,18 +63,6 @@ end
         end
         return
     end
-
-end
-
-function GFC.OnEffectChanged(eventCode, changeType, effectSlot, effectName,
-        unitTag, startTimeSec, endTimeSec, stackCount, iconName, buffType,
-        effectType, abilityType, statusEffectType, unitName, unitId,
-        effectAbilityId)
-
-    GFC:Trace(3, effectAbilityId)
-
-    -- Exclude abilities from group members
-    if unitTag and string.find(unitTag, 'group') then return end
 
     -- Not a stack
     if changeType == EFFECT_RESULT_GAINED then
