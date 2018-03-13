@@ -50,6 +50,10 @@ GFC.TEXTURE_VARIANTS = {
         name    = "Numbers (Thick Stroke)",
         asset   = "GrimFocusCounter/art/textures/NumbersThickStroke.dds",
     },
+    [9] = {
+        name    = "Filled Dots",
+        asset   = "GrimFocusCounter/art/textures/FilledDots.dds",
+    },
 }
 
 GFC.TEXTURE_FRAMES = {
