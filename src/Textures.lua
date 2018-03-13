@@ -46,6 +46,10 @@ GFC.TEXTURE_VARIANTS = {
         name    = "Mono Compass (by Porkjet)",
         asset   = "GrimFocusCounter/art/textures/CH01_BW.dds",
     },
+    [8] = {
+        name    = "Numbers (Thick Stroke)",
+        asset   = "GrimFocusCounter/art/textures/NumbersThickStroke.dds",
+    },
 }
 
 GFC.TEXTURE_FRAMES = {
