@@ -35,57 +35,16 @@
 
 GFC.ABILITIES = {
     GrimFocus = {
-        ['I'] = {
-            Skill = 61902,
-            Stack = 61905,
-        },
-        --['II'] = {
-        --    Skill = 62090,
-        --    Stack = 62091,
-        --},
-        --['III'] = {
-        --    Skill = 64176,
-        --    Stack = 64177,
-        --},
-        --['IV'] = {
-        --    Skill = 62096,
-        --    Stack = 62097,
-        --},
+        Skill = 61902,
+        Stack = 61905,
     },
     MercilessResolve = {
-        ['I'] = {
-            Skill = 61919,
-            Stack = 61920,
-        },
-        --['II'] = {
-        --    Skill = 62111,
-        --    Stack = 62112,
-        --},
-        --['III'] = {
-        --    Skill = 62114,
-        --    Stack = 62115,
-        --},
-        --['IV'] = {
-        --    Skill = 62117,
-        --    Stack = 62118,
-        --},
+        Skill = 61919,
+        Stack = 61920,
     },
     RelentlessFocus = {
-        ['I'] = {
-            Skill = 61927,
-            Stack = 61928,
-        },
-        --['II'] = {
-        --    Skill = 62099,
-        --    Stack = 62100,
-        --},
-        --['III'] = {
-        --    Skill = 62103,
-        --    Stack = 62104,
-        --},
-        --['IV'] = {
-        --    Skill = 62107,
-        --    Stack = 62108,
-        --},
+        Skill = 61927,
+        Stack = 61928,
     },
 }
+
