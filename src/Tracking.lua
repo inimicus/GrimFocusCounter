@@ -56,10 +56,7 @@ end
 function GFC.OnEffectChanged(_, changeType, _, effectName, unitTag, _, _,
         stackCount, _, _, _, _, _, _, _, effectAbilityId)
 
-    GFC:Trace(3, effectAbilityId)
-
-    -- Exclude abilities from group members
-    if unitTag and string.find(unitTag, 'group') then return end
+    GFC:Trace(3, effectName .. " (" .. effectAbilityId .. ")")
 
     -- If we have a stack
     if stackCount > 0 then
@@ -67,18 +64,18 @@ function GFC.OnEffectChanged(_, changeType, _, effectName, unitTag, _, _,
         if changeType == EFFECT_RESULT_FADED then
             currentStack = 0
             GFC.UpdateStacks(currentStack)
-            GFC:Trace(2, "Faded on stack #"..stackCount)
+            GFC:Trace(2, "Faded on stack #" .. stackCount)
         else
             currentStack = stackCount
             GFC.UpdateStacks(currentStack)
-            GFC:Trace(1, "Stack #"..stackCount)
+            GFC:Trace(1, "Stack #" .. stackCount)
         end
         return
     end
 
     -- Not a stack
     if changeType == EFFECT_RESULT_GAINED then
-        GFC:Trace(2, "Skill Activated: " ..  effectAbilityId)
+        GFC:Trace(2, "Skill Activated: " ..  effectName .. " (" .. effectAbilityId ..")")
         GFC.abilityActive = true
         GFC.SetSkillFade(false)
         GFC.UpdateStacks(currentStack)
@@ -86,7 +83,7 @@ function GFC.OnEffectChanged(_, changeType, _, effectName, unitTag, _, _,
     end
 
     if changeType == EFFECT_RESULT_FADED then
-        GFC:Trace(2, "Skill Inactive: " ..  effectAbilityId)
+        GFC:Trace(2, "Skill Inactive: " ..  effectName .. " (" .. effectAbilityId ..")")
         GFC.abilityActive = false
         GFC.SetSkillFade(true)
         GFC.UpdateStacks(currentStack)
