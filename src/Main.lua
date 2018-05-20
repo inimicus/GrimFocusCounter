@@ -54,8 +54,11 @@ function GFC.Initialize(event, addonName)
 
     GFC.preferences = ZO_SavedVars:NewAccountWide("GrimFocusCounterVariables", GFC.dbVersion, nil, GFC:GetDefaults())
 
-    -- Use saved debugMode value
-    GFC.debugMode = GFC.preferences.debugMode
+    -- Use saved debugMode value if the above value has not been changed
+    if GFC.debugMode == 0 then
+        GFC.debugMode = GFC.preferences.debugMode
+        GFC:Trace(1, "Setting debug value to saved: " .. GFC.preferences.debugMode)
+    end
 
     SLASH_COMMANDS[GFC.slash] = GFC.SlashCommand
 
