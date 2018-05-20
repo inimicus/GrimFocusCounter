@@ -53,10 +53,8 @@ function GFC.UnregisterUnfilteredEvents()
     GFC:Trace(3, "Unregistering unfiltered complete")
 end
 
-function GFC.OnEffectChanged(eventCode, changeType, effectSlot, effectName,
-        unitTag, startTimeSec, endTimeSec, stackCount, iconName, buffType,
-        effectType, abilityType, statusEffectType, unitName, unitId,
-        effectAbilityId)
+function GFC.OnEffectChanged(_, changeType, _, effectName, unitTag, _, _,
+        stackCount, _, _, _, _, _, _, _, effectAbilityId)
 
     GFC:Trace(3, effectAbilityId)
 
