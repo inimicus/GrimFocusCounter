@@ -11,9 +11,6 @@
     use the Rank I Skill and Stack ID. This means we do not
     need to be concerned with IDs for ranks II-IV anymore.
 
-    Minor Endurance:    62110
-    Minor Savagery:     61898 (and maybe 34386)
-    Minor Berserk:      64054, 64055
     Merciless:
         Rank    Skill   Stack   Status
         I:      61919   61920   Confirmed by g4rr3t
