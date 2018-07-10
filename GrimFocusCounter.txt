@@ -1,5 +1,5 @@
 ## Title: Grim Focus Counter
-## APIVersion: 100023
+## APIVersion: 100023 100024
 ## SavedVariables: GrimFocusCounterVariables
 ## Description: Displays stacks of Grim Focus (and its morphs).
 ## Version: 1.2.1
