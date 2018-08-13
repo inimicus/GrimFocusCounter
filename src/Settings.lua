@@ -190,6 +190,11 @@ local optionsTable = {
                 text = "|cBCBCBC|u0:40::Vierron|u|rAdditional blind-people perspective, testing and input",
                 width = "full",
             },
+            [4] = {
+                type = "description",
+                text = "|cBCBCBC|u0:40::meanmegan|u|rMy amazing wife and baby's mama who, through her support by allowing me to spend far too much time in-game, has made Grim Focus Counter possible -- send all your gold and goodies to her!",
+                width = "full",
+            },
         },
     },
 }
