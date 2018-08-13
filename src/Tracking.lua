@@ -61,15 +61,27 @@ function GFC.OnEffectChanged(_, changeType, _, effectName, unitTag, _, _,
     -- If we have a stack
     if stackCount > 0 then
         GFC:Trace(2, "Stack for Ability ID: " .. effectAbilityId)
+
+        GFC.SetSkillColorOverlay('default')
+
         if changeType == EFFECT_RESULT_FADED then
             currentStack = 0
-            GFC.UpdateStacks(currentStack)
             GFC:Trace(2, "Faded on stack #" .. stackCount)
         else
             currentStack = stackCount
-            GFC.UpdateStacks(currentStack)
             GFC:Trace(1, "Stack #" .. stackCount)
+
+            -- Update color for proc
+            -- There would be a more "true" way to set this
+            -- via a callback for the proc event gained,
+            -- but this is more straight-forward than setting
+            -- up another callback just for changing a color.
+            if stackCount == 5 then
+                GFC.SetSkillColorOverlay('proc')
+            end
         end
+
+        GFC.UpdateStacks(currentStack)
         return
     end
 
@@ -78,6 +90,7 @@ function GFC.OnEffectChanged(_, changeType, _, effectName, unitTag, _, _,
         GFC:Trace(2, "Skill Activated: " ..  effectName .. " (" .. effectAbilityId ..")")
         GFC.abilityActive = true
         GFC.SetSkillFade(false)
+        GFC.SetSkillColorOverlay('default')
         GFC.UpdateStacks(currentStack)
         return
     end
@@ -86,6 +99,7 @@ function GFC.OnEffectChanged(_, changeType, _, effectName, unitTag, _, _,
         GFC:Trace(2, "Skill Inactive: " ..  effectName .. " (" .. effectAbilityId ..")")
         GFC.abilityActive = false
         GFC.SetSkillFade(true)
+        GFC.SetSkillColorOverlay('inactive')
         GFC.UpdateStacks(currentStack)
         return
     end

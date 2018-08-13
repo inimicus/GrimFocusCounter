@@ -157,21 +157,53 @@ local optionsTable = {
     },
     [13] = {
         type = "checkbox",
-        name = "Color Overlay",
-        tooltip = "Overlay a texture with a provided color. Works better on some textures than others.",
-        getFunc = function() return GetColorOverlay() end,
-        setFunc = function(value) SetColorOverlay(value) end,
+        name = "Color Overlay: Default",
+        tooltip = "Overlay the indicator with a color. Works better on some textures than others.",
+        getFunc = function() return GetColorOverlay('default') end,
+        setFunc = function(value) SetColorOverlay('default', value) end,
         width = "full",
     },
     [14] = {
         type = "colorpicker",
-        name = "Color Overlay",
-        disabled = function() return not GetColorOverlay() end,
-        tooltip = "Color used for color overlay above.",
-        getFunc = function() return GetColor() end,
-        setFunc = function(r, g, b, a) SetColor(r, g, b, a) end,
+        name = "Color Overlay: Default",
+        disabled = function() return not GetColorOverlay('default') end,
+        tooltip = "Color used for Color Overlay: Default",
+        getFunc = function() return GetColor('default') end,
+        setFunc = function(r, g, b, a) SetColor('default', r, g, b, a) end,
     },
     [15] = {
+        type = "checkbox",
+        name = "Color Overlay: Inactive",
+        tooltip = "When skill is inactive, overlay the indicator with a color.",
+        getFunc = function() return GetColorOverlay('inactive') end,
+        setFunc = function(value) SetColorOverlay('inactive', value) end,
+        width = "full",
+    },
+    [16] = {
+        type = "colorpicker",
+        name = "Color Overlay: Inactive",
+        disabled = function() return not GetColorOverlay('inactive') end,
+        tooltip = "Color used for Color Overlay: Inactive",
+        getFunc = function() return GetColor('inactive') end,
+        setFunc = function(r, g, b, a) SetColor('inactive', r, g, b, a) end,
+    },
+    [17] = {
+        type = "checkbox",
+        name = "Color Overlay: Proc",
+        tooltip = "When a proc is active and spectral bow is ready to be fired, overlay the indicator with a color.",
+        getFunc = function() return GetColorOverlay('proc') end,
+        setFunc = function(value) SetColorOverlay('proc', value) end,
+        width = "full",
+    },
+    [18] = {
+        type = "colorpicker",
+        name = "Color Overlay: Proc",
+        disabled = function() return not GetColorOverlay('proc') end,
+        tooltip = "Color used for Color Overlay: Proc",
+        getFunc = function() return GetColor('proc') end,
+        setFunc = function(r, g, b, a) SetColor('proc', r, g, b, a) end,
+    },
+    [19] = {
         type = "submenu",
         name = "Acknowledgements",
         controls = {
@@ -270,27 +302,30 @@ function GetZeroStacks()
 end
 
 -- Color Overlay
-function SetColorOverlay(value)
-    GFC.preferences.colorOverlay = value
-    GFC.SetSkillColorOverlay()
+function SetColorOverlay(overlayType, value)
+    GFC.preferences.overlay[overlayType] = value
+    GFC.SetSkillColorOverlay('default')
 end
 
-function GetColorOverlay()
-    return GFC.preferences.colorOverlay
+function GetColorOverlay(overlayType, key)
+    return GFC.preferences.overlay[overlayType]
 end
 
-function SetColor(r, g, b, a)
-    GFC.preferences.color = {
+function SetColor(overlayType, r, g, b, a)
+    GFC.preferences.colors[overlayType] = {
         r = r,
         g = g,
         b = b,
         a = a,
     }
-    GFC.SetSkillColorOverlay()
+    GFC.SetSkillColorOverlay('default')
 end
 
-function GetColor()
-    return GFC.preferences.color.r, GFC.preferences.color.g, GFC.preferences.color.b, GFC.preferences.color.a
+function GetColor(overlayType)
+    return GFC.preferences.colors[overlayType].r,
+        GFC.preferences.colors[overlayType].g,
+        GFC.preferences.colors[overlayType].b,
+        GFC.preferences.colors[overlayType].a
 end
 
 -- Fade

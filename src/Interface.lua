@@ -35,22 +35,29 @@ function GFC.DrawUI()
     GFC.GFCTexture = t
 
     GFC.SetPosition(GFC.preferences.positionLeft, GFC.preferences.positionTop)
-    GFC.SetSkillColorOverlay()
+    GFC.SetSkillColorOverlay('default')
 
     GFC:Trace(2, "Finished DrawUI()")
 end
 
-function GFC.SetSkillColorOverlay()
+function GFC.SetSkillColorOverlay(overlayType)
 
     -- Read saved color
-    color = GFC.preferences.color
+    color = GFC.preferences.colors[overlayType]
 
-    if GFC.preferences.colorOverlay then
+    if GFC.preferences.overlay[overlayType] then
         -- Set active color overlay
         GFC.GFCTexture:SetColor(color.r, color.g, color.b, color.a)
     else
-        -- Set to white AKA none
-        GFC.GFCTexture:SetColor(1, 1, 1, 1)
+        -- Set to default if it's set
+        if GFC.preferences.overlay.default then
+            default = GFC.preferences.colors.default
+            GFC.GFCTexture:SetColor(default.r, default.g, default.b, default.a)
+        else 
+            -- Set to white AKA none if no default set
+            GFC.GFCTexture:SetColor(1, 1, 1, 1)
+        end
+
     end
 end
 
