@@ -51,11 +51,6 @@ local optionsTable = {
         width = "full",
     },
     [6] = {
-        type = "description",
-        text = "Many styles are a work in progress.",
-        width = "full",
-    },
-    [7] = {
         type = "dropdown",
         name = "Counter Style",
         tooltip = "Style of counter display.",
@@ -88,7 +83,7 @@ local optionsTable = {
         width = "full",
     },
     --[[
-    [7] = {
+    [6] = {
         type = "iconpicker",
         name = "Counter Style",
         choices = {
@@ -110,7 +105,7 @@ local optionsTable = {
         --beforeShow = function(control, iconPicker) return preventShow end, --(optional)
     },
     ]]
-    [8] = {
+    [7] = {
         type = "slider",
         name = "Display Size",
         tooltip = "Display size of counter.",
@@ -122,7 +117,7 @@ local optionsTable = {
         width = "full",
         default = 40,
     },
-    [9] = {
+    [8] = {
         type = "checkbox",
         name = "Show Zero Stacks",
         tooltip = "Show when skill is active but no stacks tracked.",
@@ -130,17 +125,17 @@ local optionsTable = {
         setFunc = function(value) SetZeroStacks(value) end,
         width = "full",
     },
-    [10] = {
+    [9] = {
         type = "description",
-        text = "Not all display styles currently include indicators for zero stacks.",
+        text = "Not all display styles include indicators for zero stacks.",
         width = "full",
     },
-    [11] = {
+    [10] = {
         type = "header",
         name = "Advanced Options",
         width = "full",
     },
-    [12] = {
+    [11] = {
         type = "checkbox",
         name = "Fade on Skill Inactive",
         tooltip = "Lower opacity when stacks exist and in combat, but buff has expired.",
@@ -148,7 +143,7 @@ local optionsTable = {
         setFunc = function(value) SetFade(value) end,
         width = "full",
     },
-    [13] = {
+    [12] = {
         type = "slider",
         name = "Fade Amount",
         tooltip = "Opacity of inactive skill with counted stacks",
@@ -160,7 +155,7 @@ local optionsTable = {
         width = "full",
         default = 90,
     },
-    [14] = {
+    [13] = {
         type = "checkbox",
         name = "Color Overlay",
         tooltip = "Overlay a texture with a provided color. Works better on some textures than others.",
@@ -168,7 +163,7 @@ local optionsTable = {
         setFunc = function(value) SetColorOverlay(value) end,
         width = "full",
     },
-    [15] = {
+    [14] = {
         type = "colorpicker",
         name = "Color Overlay",
         disabled = function() return not GetColorOverlay() end,
@@ -176,7 +171,7 @@ local optionsTable = {
         getFunc = function() return GetColor() end,
         setFunc = function(r, g, b, a) SetColor(r, g, b, a) end,
     },
-    [16] = {
+    [15] = {
         type = "submenu",
         name = "Acknowledgements",
         controls = {
