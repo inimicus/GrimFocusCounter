@@ -145,7 +145,6 @@ local optionsTable = {
     },
     [14] = {
         type = "colorpicker",
-        name = "Color Overlay: Default",
         disabled = function() return not GetColorOverlay('default') end,
         tooltip = "Color used for Color Overlay: Default",
         getFunc = function() return GetColor('default') end,
@@ -161,7 +160,6 @@ local optionsTable = {
     },
     [16] = {
         type = "colorpicker",
-        name = "Color Overlay: Inactive",
         disabled = function() return not GetColorOverlay('inactive') end,
         tooltip = "Color used for Color Overlay: Inactive",
         getFunc = function() return GetColor('inactive') end,
@@ -177,7 +175,6 @@ local optionsTable = {
     },
     [18] = {
         type = "colorpicker",
-        name = "Color Overlay: Proc",
         disabled = function() return not GetColorOverlay('proc') end,
         tooltip = "Color used for Color Overlay: Proc",
         getFunc = function() return GetColor('proc') end,
