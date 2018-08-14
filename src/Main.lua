@@ -10,7 +10,7 @@
 -- -----------------------------------------------------------------------------
 GFC             = {}
 GFC.name        = "GrimFocusCounter"
-GFC.version     = "1.2.1"
+GFC.version     = "1.3.0"
 GFC.dbVersion   = 1
 GFC.slash       = "/gfc"
 GFC.prefix      = "[GFC] "
@@ -53,6 +53,7 @@ function GFC.Initialize(event, addonName)
     EVENT_MANAGER:UnregisterForEvent(GFC.name, EVENT_ADD_ON_LOADED)
 
     GFC.preferences = ZO_SavedVars:NewAccountWide("GrimFocusCounterVariables", GFC.dbVersion, nil, GFC:GetDefaults())
+    GFC:UpgradeSettings()
 
     -- Use saved debugMode value if the above value has not been changed
     if GFC.debugMode == 0 then

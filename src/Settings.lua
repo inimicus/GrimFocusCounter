@@ -51,15 +51,24 @@ local optionsTable = {
         width = "full",
     },
     [6] = {
-        type = "description",
-        text = "Many styles are a work in progress.",
-        width = "full",
-    },
-    [7] = {
-        type = "dropdown",
+        type = "iconpicker",
         name = "Counter Style",
-        tooltip = "Style of counter display.",
         choices = {
+            "GrimFocusCounter/art/textures/Picker-ColorSquares.dds",
+            "GrimFocusCounter/art/textures/Picker-Doom.dds",
+            "GrimFocusCounter/art/textures/Picker-HorizontalDots.dds",
+            "GrimFocusCounter/art/textures/Picker-FilledDots.dds",
+            "GrimFocusCounter/art/textures/Picker-Numbers.dds",
+            "GrimFocusCounter/art/textures/Picker-NumbersThickStroke.dds",
+            "GrimFocusCounter/art/textures/Picker-Dice.dds",
+            "GrimFocusCounter/art/textures/Picker-PlayMagsorc.dds",
+            "GrimFocusCounter/art/textures/Picker-CH01_red.dds",
+            "GrimFocusCounter/art/textures/Picker-CH01_BW.dds",
+        },
+        getFunc = function() return GetTexture() end,
+        setFunc = function(texture) SetTexture(texture) end,
+        tooltip = "Style of counter display.",
+        choicesTooltips = {
             "Color Squares",
             "DOOM",
             "Horizontal Dots",
@@ -71,46 +80,12 @@ local optionsTable = {
             "Red Compass (by Porkjet)",
             "Mono Compass (by Porkjet)",
         },
-        choicesValues = {
-            0,
-            1,
-            2,
-            9,
-            3,
-            8,
-            4,
-            5,
-            6,
-            7,
-        },
-        getFunc = function() return GetTexture() end,
-        setFunc = function(texture) SetTexture(texture) end,
-        width = "full",
-    },
-    --[[
-    [7] = {
-        type = "iconpicker",
-        name = "Counter Style",
-        choices = {
-            "GrimFocusCounter/art/textures/HorizontalDots.dds",
-            "GrimFocusCounter/art/textures/ColorSquares.dds",
-            "esoui/art/icons/class/class_nightblade.dds",
-            "esoui/art/icons/class/class_sorcerer.dds",
-            "esoui/art/icons/class/class_templar.dds",
-            "esoui/art/icons/class/class_warden.dds",
-        },
-        getFunc = function() return 0 end,
-        setFunc = function(var) d(var) end,
-        tooltip = "Style of counter display.",
-        choicesTooltips = {"icon tooltip 1", "icon tooltip 2", "icon tooltip 3", "icon tooptip 4", "icon tooptip 4", "icon tooptip 4", "icon tooptip 4", "icon tooptip 4", "icon tooptip 4"}, -- or array of string ids or array of functions returning a string (optional)
-        maxColumns = 2,
+        maxColumns = 3,
         visibleRows = 2.5,
-        iconSize = 128,
+        iconSize = 64,
         width = "full",
-        --beforeShow = function(control, iconPicker) return preventShow end, --(optional)
     },
-    ]]
-    [8] = {
+    [7] = {
         type = "slider",
         name = "Display Size",
         tooltip = "Display size of counter.",
@@ -122,7 +97,7 @@ local optionsTable = {
         width = "full",
         default = 40,
     },
-    [9] = {
+    [8] = {
         type = "checkbox",
         name = "Show Zero Stacks",
         tooltip = "Show when skill is active but no stacks tracked.",
@@ -130,17 +105,17 @@ local optionsTable = {
         setFunc = function(value) SetZeroStacks(value) end,
         width = "full",
     },
-    [10] = {
+    [9] = {
         type = "description",
-        text = "Not all display styles currently include indicators for zero stacks.",
+        text = "Not all display styles include indicators for zero stacks.",
         width = "full",
     },
-    [11] = {
+    [10] = {
         type = "header",
         name = "Advanced Options",
         width = "full",
     },
-    [12] = {
+    [11] = {
         type = "checkbox",
         name = "Fade on Skill Inactive",
         tooltip = "Lower opacity when stacks exist and in combat, but buff has expired.",
@@ -148,7 +123,7 @@ local optionsTable = {
         setFunc = function(value) SetFade(value) end,
         width = "full",
     },
-    [13] = {
+    [12] = {
         type = "slider",
         name = "Fade Amount",
         tooltip = "Opacity of inactive skill with counted stacks",
@@ -160,23 +135,52 @@ local optionsTable = {
         width = "full",
         default = 90,
     },
-    [14] = {
+    [13] = {
         type = "checkbox",
-        name = "Color Overlay",
-        tooltip = "Overlay a texture with a provided color. Works better on some textures than others.",
-        getFunc = function() return GetColorOverlay() end,
-        setFunc = function(value) SetColorOverlay(value) end,
+        name = "Color Overlay: Default",
+        tooltip = "Overlay the indicator with a color. Works better on some textures than others.",
+        getFunc = function() return GetColorOverlay('default') end,
+        setFunc = function(value) SetColorOverlay('default', value) end,
         width = "full",
     },
-    [15] = {
+    [14] = {
         type = "colorpicker",
-        name = "Color Overlay",
-        disabled = function() return not GetColorOverlay() end,
-        tooltip = "Color used for color overlay above.",
-        getFunc = function() return GetColor() end,
-        setFunc = function(r, g, b, a) SetColor(r, g, b, a) end,
+        disabled = function() return not GetColorOverlay('default') end,
+        tooltip = "Color used for Color Overlay: Default",
+        getFunc = function() return GetColor('default') end,
+        setFunc = function(r, g, b, a) SetColor('default', r, g, b, a) end,
+    },
+    [15] = {
+        type = "checkbox",
+        name = "Color Overlay: Inactive",
+        tooltip = "When skill is inactive, overlay the indicator with a color.",
+        getFunc = function() return GetColorOverlay('inactive') end,
+        setFunc = function(value) SetColorOverlay('inactive', value) end,
+        width = "full",
     },
     [16] = {
+        type = "colorpicker",
+        disabled = function() return not GetColorOverlay('inactive') end,
+        tooltip = "Color used for Color Overlay: Inactive",
+        getFunc = function() return GetColor('inactive') end,
+        setFunc = function(r, g, b, a) SetColor('inactive', r, g, b, a) end,
+    },
+    [17] = {
+        type = "checkbox",
+        name = "Color Overlay: Proc",
+        tooltip = "When a proc is active and spectral bow is ready to be fired, overlay the indicator with a color.",
+        getFunc = function() return GetColorOverlay('proc') end,
+        setFunc = function(value) SetColorOverlay('proc', value) end,
+        width = "full",
+    },
+    [18] = {
+        type = "colorpicker",
+        disabled = function() return not GetColorOverlay('proc') end,
+        tooltip = "Color used for Color Overlay: Proc",
+        getFunc = function() return GetColor('proc') end,
+        setFunc = function(r, g, b, a) SetColor('proc', r, g, b, a) end,
+    },
+    [19] = {
         type = "submenu",
         name = "Acknowledgements",
         controls = {
@@ -193,6 +197,11 @@ local optionsTable = {
             [3] = {
                 type = "description",
                 text = "|cBCBCBC|u0:40::Vierron|u|rAdditional blind-people perspective, testing and input",
+                width = "full",
+            },
+            [4] = {
+                type = "description",
+                text = "|cBCBCBC|u0:40::meanmegan|u|rMy amazing wife and baby's mama who, through her support by allowing me to spend far too much time in-game, has made Grim Focus Counter possible -- send all your gold and goodies to her!",
                 width = "full",
             },
         },
@@ -241,12 +250,29 @@ end
 
 -- Textures
 function SetTexture(value)
-    GFC.GFCTexture:SetTexture(GFC.TEXTURE_VARIANTS[value].asset)
-    GFC.preferences.selectedTexture = value
+
+    -- Search texture array
+    -- We are passed the picker's texture,
+    -- convert to the index of the texture table.
+    for index, texture in pairs(GFC.TEXTURE_VARIANTS) do
+        if texture.picker == value then
+            selectedTexture = index 
+            break
+        end
+    end
+
+    if selectedTexture ~= nil then
+        GFC.GFCTexture:SetTexture(GFC.TEXTURE_VARIANTS[selectedTexture].asset)
+        GFC.preferences.selectedTexture = selectedTexture
+    else
+        d('[GFC] Could not load specified texture!')
+    end
+
 end
 
 function GetTexture()
-    return GFC.preferences.selectedTexture
+    selectedTexture = GFC.preferences.selectedTexture
+    return GFC.TEXTURE_VARIANTS[selectedTexture].picker
 end
 
 -- Sizing
@@ -270,27 +296,30 @@ function GetZeroStacks()
 end
 
 -- Color Overlay
-function SetColorOverlay(value)
-    GFC.preferences.colorOverlay = value
-    GFC.SetSkillColorOverlay()
+function SetColorOverlay(overlayType, value)
+    GFC.preferences.overlay[overlayType] = value
+    GFC.SetSkillColorOverlay('default')
 end
 
-function GetColorOverlay()
-    return GFC.preferences.colorOverlay
+function GetColorOverlay(overlayType, key)
+    return GFC.preferences.overlay[overlayType]
 end
 
-function SetColor(r, g, b, a)
-    GFC.preferences.color = {
+function SetColor(overlayType, r, g, b, a)
+    GFC.preferences.colors[overlayType] = {
         r = r,
         g = g,
         b = b,
         a = a,
     }
-    GFC.SetSkillColorOverlay()
+    GFC.SetSkillColorOverlay('default')
 end
 
-function GetColor()
-    return GFC.preferences.color.r, GFC.preferences.color.g, GFC.preferences.color.b, GFC.preferences.color.a
+function GetColor(overlayType)
+    return GFC.preferences.colors[overlayType].r,
+        GFC.preferences.colors[overlayType].g,
+        GFC.preferences.colors[overlayType].b,
+        GFC.preferences.colors[overlayType].a
 end
 
 -- Fade
@@ -316,6 +345,7 @@ end
 function GetFadeAmount()
     return GFC.preferences.fadeAmount
 end
+
 -- -----------------------------------------------------------------------------
 -- Initialize Settings
 -- -----------------------------------------------------------------------------
@@ -325,5 +355,22 @@ function GFC:InitSettings()
     LAM:RegisterOptionControls(GFC.name, optionsTable)
 
     GFC:Trace(2, "Finished InitSettings()")
+end
+
+-- -----------------------------------------------------------------------------
+-- Settings Upgrade Function
+-- -----------------------------------------------------------------------------
+
+function GFC:UpgradeSettings()
+    -- Check if we've already upgraded
+    if GFC.preferences.colorOverlay == nil and GFC.preferences.color == nil then return end
+
+    -- Copy default color overlay to new savedvar
+    GFC.preferences.overlay.default = GFC.preferences.colorOverlay
+    GFC.preferences.colors.default = GFC.preferences.color
+
+    -- Clear old, indicate upgraded
+    GFC.preferences.colorOverlay = nil
+    GFC.preferences.color= nil
 end
 

@@ -15,12 +15,30 @@ local defaults = {
     size = 100,
     unlocked = true,
     lockedToReticle = false,
-    colorOverlay = false,
-    color = {
-        r = 1,
-        g = 1,
-        b = 1,
-        a = 1,
+    overlay = {
+        default   = false,
+        inactive  = false,
+        proc      = false,
+    },
+    colors = {
+        default = {
+            r = 1,
+            g = 1,
+            b = 1,
+            a = 1,
+        },
+        inactive = {
+            r = 1,
+            g = 1,
+            b = 1,
+            a = 1,
+        },
+        proc = {
+            r = 1,
+            g = 1,
+            b = 1,
+            a = 1,
+        },
     },
     fadeInactive = false,
     fadeAmount = 90,
