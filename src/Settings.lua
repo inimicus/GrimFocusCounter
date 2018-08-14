@@ -348,6 +348,7 @@ end
 function GetFadeAmount()
     return GFC.preferences.fadeAmount
 end
+
 -- -----------------------------------------------------------------------------
 -- Initialize Settings
 -- -----------------------------------------------------------------------------
@@ -357,5 +358,22 @@ function GFC:InitSettings()
     LAM:RegisterOptionControls(GFC.name, optionsTable)
 
     GFC:Trace(2, "Finished InitSettings()")
+end
+
+-- -----------------------------------------------------------------------------
+-- Settings Upgrade Function
+-- -----------------------------------------------------------------------------
+
+function GFC:UpgradeSettings()
+    -- Check if we've already upgraded
+    if GFC.preferences.colorOverlay == nil and GFC.preferences.color == nil then return end
+
+    -- Copy default color overlay to new savedvar
+    GFC.preferences.overlay.default = GFC.preferences.colorOverlay
+    GFC.preferences.colors.default = GFC.preferences.color
+
+    -- Clear old, indicate upgraded
+    GFC.preferences.colorOverlay = nil
+    GFC.preferences.color= nil
 end
 
