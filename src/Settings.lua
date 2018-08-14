@@ -51,10 +51,24 @@ local optionsTable = {
         width = "full",
     },
     [6] = {
-        type = "dropdown",
+        type = "iconpicker",
         name = "Counter Style",
-        tooltip = "Style of counter display.",
         choices = {
+            "GrimFocusCounter/art/textures/Picker-ColorSquares.dds",
+            "GrimFocusCounter/art/textures/Picker-Doom.dds",
+            "GrimFocusCounter/art/textures/Picker-HorizontalDots.dds",
+            "GrimFocusCounter/art/textures/Picker-FilledDots.dds",
+            "GrimFocusCounter/art/textures/Picker-Numbers.dds",
+            "GrimFocusCounter/art/textures/Picker-NumbersThickStroke.dds",
+            "GrimFocusCounter/art/textures/Picker-Dice.dds",
+            "GrimFocusCounter/art/textures/Picker-PlayMagsorc.dds",
+            "GrimFocusCounter/art/textures/Picker-CH01_red.dds",
+            "GrimFocusCounter/art/textures/Picker-CH01_BW.dds",
+        },
+        getFunc = function() return GetTexture() end,
+        setFunc = function(texture) SetTexture(texture) end,
+        tooltip = "Style of counter display.",
+        choicesTooltips = {
             "Color Squares",
             "DOOM",
             "Horizontal Dots",
@@ -66,45 +80,11 @@ local optionsTable = {
             "Red Compass (by Porkjet)",
             "Mono Compass (by Porkjet)",
         },
-        choicesValues = {
-            0,
-            1,
-            2,
-            9,
-            3,
-            8,
-            4,
-            5,
-            6,
-            7,
-        },
-        getFunc = function() return GetTexture() end,
-        setFunc = function(texture) SetTexture(texture) end,
-        width = "full",
-    },
-    --[[
-    [6] = {
-        type = "iconpicker",
-        name = "Counter Style",
-        choices = {
-            "GrimFocusCounter/art/textures/HorizontalDots.dds",
-            "GrimFocusCounter/art/textures/ColorSquares.dds",
-            "esoui/art/icons/class/class_nightblade.dds",
-            "esoui/art/icons/class/class_sorcerer.dds",
-            "esoui/art/icons/class/class_templar.dds",
-            "esoui/art/icons/class/class_warden.dds",
-        },
-        getFunc = function() return 0 end,
-        setFunc = function(var) d(var) end,
-        tooltip = "Style of counter display.",
-        choicesTooltips = {"icon tooltip 1", "icon tooltip 2", "icon tooltip 3", "icon tooptip 4", "icon tooptip 4", "icon tooptip 4", "icon tooptip 4", "icon tooptip 4", "icon tooptip 4"}, -- or array of string ids or array of functions returning a string (optional)
-        maxColumns = 2,
+        maxColumns = 3,
         visibleRows = 2.5,
-        iconSize = 128,
+        iconSize = 64,
         width = "full",
-        --beforeShow = function(control, iconPicker) return preventShow end, --(optional)
     },
-    ]]
     [7] = {
         type = "slider",
         name = "Display Size",
@@ -273,12 +253,29 @@ end
 
 -- Textures
 function SetTexture(value)
-    GFC.GFCTexture:SetTexture(GFC.TEXTURE_VARIANTS[value].asset)
-    GFC.preferences.selectedTexture = value
+
+    -- Search texture array
+    -- We are passed the picker's texture,
+    -- convert to the index of the texture table.
+    for index, texture in pairs(GFC.TEXTURE_VARIANTS) do
+        if texture.picker == value then
+            selectedTexture = index 
+            break
+        end
+    end
+
+    if selectedTexture ~= nil then
+        GFC.GFCTexture:SetTexture(GFC.TEXTURE_VARIANTS[selectedTexture].asset)
+        GFC.preferences.selectedTexture = selectedTexture
+    else
+        d('[GFC] Could not load specified texture!')
+    end
+
 end
 
 function GetTexture()
-    return GFC.preferences.selectedTexture
+    selectedTexture = GFC.preferences.selectedTexture
+    return GFC.TEXTURE_VARIANTS[selectedTexture].picker
 end
 
 -- Sizing

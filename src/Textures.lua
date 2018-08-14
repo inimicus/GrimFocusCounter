@@ -17,42 +17,52 @@ GFC.TEXTURE_VARIANTS = {
     [0] = {
         name    = "Color Squares",
         asset   = "GrimFocusCounter/art/textures/ColorSquares.dds",
+        picker  = "GrimFocusCounter/art/textures/Picker-ColorSquares.dds",
     },
     [1] = {
         name    = "DOOM",
         asset   = "GrimFocusCounter/art/textures/Doom.dds",
+        picker  = "GrimFocusCounter/art/textures/Picker-Doom.dds",
     },
     [2] = {
         name    = "Horizontal Dots",
         asset   = "GrimFocusCounter/art/textures/HorizontalDots.dds",
+        picker  = "GrimFocusCounter/art/textures/Picker-HorizontalDots.dds",
     },
     [3] = {
         name    = "Numbers",
         asset   = "GrimFocusCounter/art/textures/Numbers.dds",
+        picker  = "GrimFocusCounter/art/textures/Picker-Numbers.dds",
     },
     [4] = {
         name    = "Dice",
         asset   = "GrimFocusCounter/art/textures/Dice.dds",
+        picker  = "GrimFocusCounter/art/textures/Picker-Dice.dds",
     },
     [5] = {
         name    = "Play Magsorc",
         asset   = "GrimFocusCounter/art/textures/PlayMagsorc.dds",
+        picker  = "GrimFocusCounter/art/textures/Picker-PlayMagsorc.dds",
     },
     [6] = {
         name    = "Red Compass (by Porkjet)",
         asset   = "GrimFocusCounter/art/textures/CH01_red.dds",
+        picker  = "GrimFocusCounter/art/textures/Picker-CH01_red.dds",
     },
     [7] = {
         name    = "Mono Compass (by Porkjet)",
         asset   = "GrimFocusCounter/art/textures/CH01_BW.dds",
+        picker  = "GrimFocusCounter/art/textures/Picker-CH01_BW.dds",
     },
     [8] = {
         name    = "Numbers (Thick Stroke)",
         asset   = "GrimFocusCounter/art/textures/NumbersThickStroke.dds",
+        picker  = "GrimFocusCounter/art/textures/Picker-NumbersThickStroke.dds",
     },
     [9] = {
         name    = "Filled Dots",
         asset   = "GrimFocusCounter/art/textures/FilledDots.dds",
+        picker  = "GrimFocusCounter/art/textures/Picker-FilledDots.dds",
     },
 }
 
