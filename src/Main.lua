@@ -16,6 +16,7 @@ GFC.slash       = "/gfc"
 GFC.prefix      = "[GFC] "
 GFC.HUDHidden   = false
 GFC.ForceShow   = false
+GFC.isInCombat  = false
 
 -- -----------------------------------------------------------------------------
 -- Level of debug output
