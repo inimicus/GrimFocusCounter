@@ -87,7 +87,7 @@ function GFC.OnEffectChanged(_, changeType, _, effectName, unitTag, _, _,
 
     -- Not a stack
     if changeType == EFFECT_RESULT_GAINED then
-        GFC:Trace(2, "Skill Activated: " ..  effectName .. " (" .. effectAbilityId ..")")
+        GFC:Trace(2, "Skill Activated: " ..  effectName .. " (" .. effectAbilityId ..") with " .. currentStack .. " stacks")
         GFC.abilityActive = true
         GFC.SetSkillFade(false)
 
@@ -102,7 +102,7 @@ function GFC.OnEffectChanged(_, changeType, _, effectName, unitTag, _, _,
     end
 
     if changeType == EFFECT_RESULT_FADED then
-        GFC:Trace(2, "Skill Inactive: " ..  effectName .. " (" .. effectAbilityId ..")")
+        GFC:Trace(2, "Skill Inactive: " ..  effectName .. " (" .. effectAbilityId ..") with " .. currentStack .. " stacks")
         GFC.abilityActive = false
         GFC.SetSkillFade(true)
         GFC.SetSkillColorOverlay('inactive')
