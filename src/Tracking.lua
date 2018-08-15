@@ -31,6 +31,9 @@ function GFC.RegisterEvents()
             EVENT_MANAGER:AddFilterForEvent(name, EVENT_EFFECT_CHANGED, REGISTER_FILTER_SOURCE_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_PLAYER)
         end
     end
+
+    -- Register start/end combat events
+    EVENT_MANAGER:RegisterForEvent(name, EVENT_PLAYER_COMBAT_STATE, function(...) GFC.IsInCombat(...) end)
 end
 
 function GFC.UnregisterEvents()
@@ -41,16 +44,32 @@ function GFC.UnregisterEvents()
             EVENT_MANAGER:UnregisterForEvent(name, EVENT_EFFECT_CHANGED)
         end
     end
+
+    EVENT_MANAGER:UnregisterForEvent(GFC.name .. "COMBAT_STATE", EVENT_PLAYER_COMBAT_STATE)
 end
 
 function GFC.RegisterUnfilteredEvents()
-    EVENT_MANAGER:RegisterForEvent(GFC.name, EVENT_EFFECT_CHANGED, function(...) GFC.OnEffectChanged(...) end)
+    EVENT_MANAGER:RegisterForEvent(GFC.name .. "COMBAT_STATE", EVENT_PLAYER_COMBAT_STATE, function(...) GFC.IsInCombat(...) end)
+    EVENT_MANAGER:RegisterForEvent(GFC.name .. "UNFILTERED", EVENT_EFFECT_CHANGED, function(...) GFC.OnEffectChanged(...) end)
     GFC:Trace(3, "Registering unfiltered complete")
 end
 
 function GFC.UnregisterUnfilteredEvents()
-    EVENT_MANAGER:UnregisterForEvent(GFC.name, EVENT_EFFECT_CHANGED)
+    EVENT_MANAGER:UnregisterForEvent(GFC.name .. "COMBAT_STATE", EVENT_PLAYER_COMBAT_STATE)
+    EVENT_MANAGER:UnregisterForEvent(GFC.name .. "UNFILTERED", EVENT_EFFECT_CHANGED)
     GFC:Trace(3, "Unregistering unfiltered complete")
+end
+
+function GFC.IsInCombat(_, inCombat)
+    GFC.isInCombat = inCombat
+
+    if inCombat then
+        GFC:Trace(2, "Entered Combat")
+    else
+        GFC:Trace(2, "Left Combat")
+        GFC.UpdateStacks(currentStack)
+    end
+
 end
 
 function GFC.OnEffectChanged(_, changeType, _, effectName, unitTag, _, _,
@@ -67,36 +86,44 @@ function GFC.OnEffectChanged(_, changeType, _, effectName, unitTag, _, _,
         if changeType == EFFECT_RESULT_FADED then
             currentStack = 0
             GFC:Trace(2, "Faded on stack #" .. stackCount)
+            GFC.UpdateStacks(currentStack)
         else
             currentStack = stackCount
-            GFC:Trace(1, "Stack #" .. stackCount)
+            GFC:Trace(1, "Stack #" .. currentStack)
 
             -- Update color for proc
             -- There would be a more "true" way to set this
             -- via a callback for the proc event gained,
             -- but this is more straight-forward than setting
             -- up another callback just for changing a color.
-            if stackCount == 5 then
+            if currentStack == 5 then
                 GFC.SetSkillColorOverlay('proc')
             end
+
+            GFC.UpdateStacks(currentStack)
+        end
+
+        return
+    end
+
+    -- Not a stack
+    if changeType == EFFECT_RESULT_GAINED then
+        GFC:Trace(2, "Skill Activated: " ..  effectName .. " (" .. effectAbilityId ..") with " .. currentStack .. " stacks")
+        GFC.abilityActive = true
+        GFC.SetSkillFade(false)
+
+        if currentStack == 5 then
+            GFC.SetSkillColorOverlay('proc')
+        else
+            GFC.SetSkillColorOverlay('default')
         end
 
         GFC.UpdateStacks(currentStack)
         return
     end
 
-    -- Not a stack
-    if changeType == EFFECT_RESULT_GAINED then
-        GFC:Trace(2, "Skill Activated: " ..  effectName .. " (" .. effectAbilityId ..")")
-        GFC.abilityActive = true
-        GFC.SetSkillFade(false)
-        GFC.SetSkillColorOverlay('default')
-        GFC.UpdateStacks(currentStack)
-        return
-    end
-
     if changeType == EFFECT_RESULT_FADED then
-        GFC:Trace(2, "Skill Inactive: " ..  effectName .. " (" .. effectAbilityId ..")")
+        GFC:Trace(2, "Skill Inactive: " ..  effectName .. " (" .. effectAbilityId ..") with " .. currentStack .. " stacks")
         GFC.abilityActive = false
         GFC.SetSkillFade(true)
         GFC.SetSkillColorOverlay('inactive')

@@ -10,12 +10,13 @@
 -- -----------------------------------------------------------------------------
 GFC             = {}
 GFC.name        = "GrimFocusCounter"
-GFC.version     = "1.3.0"
+GFC.version     = "1.3.1"
 GFC.dbVersion   = 1
 GFC.slash       = "/gfc"
 GFC.prefix      = "[GFC] "
 GFC.HUDHidden   = false
 GFC.ForceShow   = false
+GFC.isInCombat  = false
 
 -- -----------------------------------------------------------------------------
 -- Level of debug output

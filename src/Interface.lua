@@ -154,7 +154,7 @@ function GFC.UpdateStacks(stackCount)
     else
 
         -- Show zero stack indicator for active ability
-        if GFC.preferences.showEmptyStacks and GFC.abilityActive then
+        if GFC.preferences.showEmptyStacks and (GFC.abilityActive or GFC.isInCombat) then
             GFC:Trace(1, "Stack #0 (Show Empty)")
             GFC.GFCTexture:SetTextureCoords(GFC.TEXTURE_FRAMES[6].REL, GFC.TEXTURE_FRAMES[7].REL, 0, 1)
             return
