@@ -76,7 +76,7 @@ function GFC.OnEffectChanged(_, changeType, _, effectName, unitTag, _, _,
             -- via a callback for the proc event gained,
             -- but this is more straight-forward than setting
             -- up another callback just for changing a color.
-            if stackCount == 5 then
+            if currentStack == 5 then
                 GFC.SetSkillColorOverlay('proc')
             end
         end
@@ -90,7 +90,13 @@ function GFC.OnEffectChanged(_, changeType, _, effectName, unitTag, _, _,
         GFC:Trace(2, "Skill Activated: " ..  effectName .. " (" .. effectAbilityId ..")")
         GFC.abilityActive = true
         GFC.SetSkillFade(false)
-        GFC.SetSkillColorOverlay('default')
+
+        if currentStack == 5 then
+            GFC.SetSkillColorOverlay('proc')
+        else
+            GFC.SetSkillColorOverlay('default')
+        end
+
         GFC.UpdateStacks(currentStack)
         return
     end
