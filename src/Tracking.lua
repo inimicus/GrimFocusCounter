@@ -91,12 +91,15 @@ function GFC.OnEffectChanged(_, changeType, _, effectName, unitTag, _, _,
             currentStack = stackCount
             GFC:Trace(1, "Stack #" .. currentStack)
 
+            -- Update color for 4 stacks and optionally play a sound
+            if currentStack == 4 then
+                GFC.SetSkillColorOverlay('four')
             -- Update color for proc
             -- There would be a more "true" way to set this
             -- via a callback for the proc event gained,
             -- but this is more straight-forward than setting
             -- up another callback just for changing a color.
-            if currentStack == 5 then
+            elseif currentStack == 5 then
                 GFC.SetSkillColorOverlay('proc')
             end
 
@@ -112,7 +115,9 @@ function GFC.OnEffectChanged(_, changeType, _, effectName, unitTag, _, _,
         GFC.abilityActive = true
         GFC.SetSkillFade(false)
 
-        if currentStack == 5 then
+        if currentStack == 4 then
+            GFC.SetSkillColorOverlay('four')
+        elseif currentStack == 5 then
             GFC.SetSkillColorOverlay('proc')
         else
             GFC.SetSkillColorOverlay('default')
