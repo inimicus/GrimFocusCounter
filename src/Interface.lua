@@ -53,7 +53,7 @@ function GFC.SetSkillColorOverlay(overlayType)
         if GFC.preferences.overlay.default then
             default = GFC.preferences.colors.default
             GFC.GFCTexture:SetColor(default.r, default.g, default.b, default.a)
-        else 
+        else
             -- Set to white AKA none if no default set
             GFC.GFCTexture:SetColor(1, 1, 1, 1)
         end

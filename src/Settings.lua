@@ -18,26 +18,26 @@ local panelData = {
 }
 
 local optionsTable = {
-    [1] = {
+    {
         type = "header",
         name = "Positioning",
         width = "full",
     },
-    [2] = {
+    {
         type = "button",
         name = function() if GFC.preferences.unlocked then return "Lock" else return "Unlock" end end,
         tooltip = "Toggle lock/unlock state of counter display for repositioning.",
         func = function(control) ToggleLocked(control) end,
         width = "half",
     },
-    [3] = {
+    {
         type = "button",
         name = function() if GFC.ForceShow then return "Hide" else return "Show" end end,
         tooltip = "Force show for position or previewing display settings.",
         func = function(control) ForceShow(control) end,
         width = "half",
     },
-    [4] = {
+    {
         type = "checkbox",
         name = "Lock to Reticle",
         tooltip = "Snap display of counter to center of reticle. Some display options may appear better than others positioned this way.",
@@ -45,12 +45,12 @@ local optionsTable = {
         setFunc = function(value) SetLockReticle(value) end,
         width = "full",
     },
-    [5] = {
+    {
         type = "header",
         name = "Style",
         width = "full",
     },
-    [6] = {
+    {
         type = "iconpicker",
         name = "Counter Style",
         choices = {
@@ -85,7 +85,7 @@ local optionsTable = {
         iconSize = 64,
         width = "full",
     },
-    [7] = {
+    {
         type = "slider",
         name = "Display Size",
         tooltip = "Display size of counter.",
@@ -97,7 +97,7 @@ local optionsTable = {
         width = "full",
         default = 40,
     },
-    [8] = {
+    {
         type = "checkbox",
         name = "Show Zero Stacks",
         tooltip = "Show when skill is active but no stacks tracked.",
@@ -105,17 +105,17 @@ local optionsTable = {
         setFunc = function(value) SetZeroStacks(value) end,
         width = "full",
     },
-    [9] = {
+    {
         type = "description",
         text = "Not all display styles include indicators for zero stacks.",
         width = "full",
     },
-    [10] = {
+    {
         type = "header",
         name = "Advanced Options",
         width = "full",
     },
-    [11] = {
+    {
         type = "checkbox",
         name = "Fade on Skill Inactive",
         tooltip = "Lower opacity when stacks exist and in combat, but buff has expired.",
@@ -123,7 +123,7 @@ local optionsTable = {
         setFunc = function(value) SetFade(value) end,
         width = "full",
     },
-    [12] = {
+    {
         type = "slider",
         name = "Fade Amount",
         tooltip = "Opacity of inactive skill with counted stacks",
@@ -135,7 +135,7 @@ local optionsTable = {
         width = "full",
         default = 90,
     },
-    [13] = {
+    {
         type = "checkbox",
         name = "Color Overlay: Default",
         tooltip = "Overlay the indicator with a color. Works better on some textures than others.",
@@ -143,14 +143,14 @@ local optionsTable = {
         setFunc = function(value) SetColorOverlay('default', value) end,
         width = "full",
     },
-    [14] = {
+    {
         type = "colorpicker",
         disabled = function() return not GetColorOverlay('default') end,
         tooltip = "Color used for Color Overlay: Default",
         getFunc = function() return GetColor('default') end,
         setFunc = function(r, g, b, a) SetColor('default', r, g, b, a) end,
     },
-    [15] = {
+    {
         type = "checkbox",
         name = "Color Overlay: Inactive",
         tooltip = "When skill is inactive, overlay the indicator with a color.",
@@ -158,14 +158,29 @@ local optionsTable = {
         setFunc = function(value) SetColorOverlay('inactive', value) end,
         width = "full",
     },
-    [16] = {
+    {
         type = "colorpicker",
         disabled = function() return not GetColorOverlay('inactive') end,
         tooltip = "Color used for Color Overlay: Inactive",
         getFunc = function() return GetColor('inactive') end,
         setFunc = function(r, g, b, a) SetColor('inactive', r, g, b, a) end,
     },
-    [17] = {
+    {
+        type = "checkbox",
+        name = "Color Overlay: 4 Stacks",
+        tooltip = "Differentiate the significance of 4 stacks to prepare to fire bow proc.",
+        getFunc = function() return GetColorOverlay('four') end,
+        setFunc = function(value) SetColorOverlay('four', value) end,
+        width = "full",
+    },
+    {
+        type = "colorpicker",
+        disabled = function() return not GetColorOverlay('four') end,
+        tooltip = "Color used for Color Overlay: Proc",
+        getFunc = function() return GetColor('four') end,
+        setFunc = function(r, g, b, a) SetColor('four', r, g, b, a) end,
+    },
+    {
         type = "checkbox",
         name = "Color Overlay: Proc",
         tooltip = "When a proc is active and spectral bow is ready to be fired, overlay the indicator with a color.",
@@ -173,14 +188,14 @@ local optionsTable = {
         setFunc = function(value) SetColorOverlay('proc', value) end,
         width = "full",
     },
-    [18] = {
+    {
         type = "colorpicker",
         disabled = function() return not GetColorOverlay('proc') end,
         tooltip = "Color used for Color Overlay: Proc",
         getFunc = function() return GetColor('proc') end,
         setFunc = function(r, g, b, a) SetColor('proc', r, g, b, a) end,
     },
-    [19] = {
+    {
         type = "submenu",
         name = "Acknowledgements",
         controls = {
@@ -256,7 +271,7 @@ function SetTexture(value)
     -- convert to the index of the texture table.
     for index, texture in pairs(GFC.TEXTURE_VARIANTS) do
         if texture.picker == value then
-            selectedTexture = index 
+            selectedTexture = index
             break
         end
     end

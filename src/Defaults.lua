@@ -18,6 +18,7 @@ local defaults = {
     overlay = {
         default   = false,
         inactive  = false,
+        four      = false,
         proc      = false,
     },
     colors = {
@@ -28,6 +29,12 @@ local defaults = {
             a = 1,
         },
         inactive = {
+            r = 1,
+            g = 1,
+            b = 1,
+            a = 1,
+        },
+        four = {
             r = 1,
             g = 1,
             b = 1,
