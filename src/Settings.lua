@@ -271,7 +271,7 @@ function SetTexture(value)
     -- convert to the index of the texture table.
     for index, texture in pairs(GFC.TEXTURE_VARIANTS) do
         if texture.picker == value then
-            selectedTexture = index 
+            selectedTexture = index
             break
         end
     end
