@@ -1,27 +1,11 @@
 ## Title: Grim Focus Counter
-## APIVersion: 100026 100027
+## APIVersion: 100028
 ## SavedVariables: GrimFocusCounterVariables
 ## Description: Displays stacks of Grim Focus (and its morphs).
-## Version: 1.4.1
+## Version: 1.4.2
+## AddOnVersion: 10402
 ## Author: |cFFCCCC@g4rr3t|r (NA)
-## OptionalDependsOn:  LibAddonMenu-2.0
-
-lib/LibStub/LibStub.lua
-lib/LibAddonMenu-2.0/LibAddonMenu-2.0.lua
-lib/LibAddonMenu-2.0/controls/panel.lua
-lib/LibAddonMenu-2.0/controls/submenu.lua
-lib/LibAddonMenu-2.0/controls/button.lua
-lib/LibAddonMenu-2.0/controls/checkbox.lua
-lib/LibAddonMenu-2.0/controls/colorpicker.lua
-lib/LibAddonMenu-2.0/controls/custom.lua
-lib/LibAddonMenu-2.0/controls/description.lua
-lib/LibAddonMenu-2.0/controls/dropdown.lua
-lib/LibAddonMenu-2.0/controls/editbox.lua
-lib/LibAddonMenu-2.0/controls/header.lua
-lib/LibAddonMenu-2.0/controls/slider.lua
-lib/LibAddonMenu-2.0/controls/texture.lua
-lib/LibAddonMenu-2.0/controls/iconpicker.lua
-lib/LibAddonMenu-2.0/controls/divider.lua
+## DependsOn: LibAddonMenu-2.0>=28
 
 src/Main.lua
 src/Textures.lua
@@ -30,3 +14,8 @@ src/Abilities.lua
 src/Settings.lua
 src/Tracking.lua
 src/Interface.lua
+
+; Configuration for makePackage.sh
+; See github.com/inimicus/makePackage for more information
+; PackageExcludes: art/gifs/* art/gifs/**/*
+; PackageBumpFiles: src/Main.lua

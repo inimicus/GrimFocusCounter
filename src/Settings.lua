@@ -6,7 +6,7 @@
 -- Settings.lua
 -- -----------------------------------------------------------------------------
 
-local LAM = LibStub("LibAddonMenu-2.0")
+local LAM = LibAddonMenu2
 
 local panelData = {
     type        = "panel",
