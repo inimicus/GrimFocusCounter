@@ -30,3 +30,8 @@ src/Abilities.lua
 src/Settings.lua
 src/Tracking.lua
 src/Interface.lua
+
+; Configuration for makePackage.sh
+; See github.com/inimicus/makePackage for more information
+; PackageExcludes: art/gifs/* art/gifs/**/*
+; PackageBumpFiles: src/Main.lua
