@@ -10,7 +10,7 @@
 -- -----------------------------------------------------------------------------
 GFC             = {}
 GFC.name        = "GrimFocusCounter"
-GFC.version     = "1.4.2"
+GFC.version     = "1.4.3"
 GFC.dbVersion   = 1
 GFC.slash       = "/gfc"
 GFC.prefix      = "[GFC] "
