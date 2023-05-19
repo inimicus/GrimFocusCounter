@@ -4,9 +4,10 @@
   "Lua.workspace.library": ["../eso-api-lua-intellij-baertram_API101038"],
   "diagnostics.globals": [
     "GuiRoot",
-    "LibAddonMenu2",
     "HUD_SCENE",
     "HUD_UI_SCENE",
-    "WINDOW_MANAGER",
+    "LibAddonMenu2",
+    "SLASH_COMMANDS",
+    "WINDOW_MANAGER"
   ]
 }

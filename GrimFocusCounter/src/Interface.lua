@@ -15,7 +15,7 @@ function GFC.DrawUI()
     c:SetAlpha(1)
     c:SetMovable(GFC.preferences.unlocked)
     c:SetHidden(false)
-    c:SetHandler("OnMoveStop", function(...) GFC.SavePosition() end)
+    c:SetHandler("OnMoveStop", GFC.SavePosition)
 
     -- Check for valid texture
     -- Potential fix for UI error discovered by Porkjet
@@ -41,9 +41,8 @@ function GFC.DrawUI()
 end
 
 function GFC.SetSkillColorOverlay(overlayType)
-
     -- Read saved color
-    color = GFC.preferences.colors[overlayType]
+    local color = GFC.preferences.colors[overlayType]
 
     if GFC.preferences.overlay[overlayType] then
         -- Set active color overlay
@@ -51,13 +50,12 @@ function GFC.SetSkillColorOverlay(overlayType)
     else
         -- Set to default if it's set
         if GFC.preferences.overlay.default then
-            default = GFC.preferences.colors.default
+            local default = GFC.preferences.colors.default
             GFC.GFCTexture:SetColor(default.r, default.g, default.b, default.a)
         else
             -- Set to white AKA none if no default set
             GFC.GFCTexture:SetColor(1, 1, 1, 1)
         end
-
     end
 end
 
@@ -65,7 +63,7 @@ function GFC.SetSkillFade(faded)
     -- Only change fade if our options want us to fade
     if GFC.preferences.fadeInactive then
         if faded then
-            alpha = GFC.preferences.fadeAmount / 100
+            local alpha = GFC.preferences.fadeAmount / 100
             GFC.GFCContainer:SetAlpha(alpha)
         else
             GFC.GFCContainer:SetAlpha(1)
@@ -75,8 +73,7 @@ end
 
 function GFC.ToggleHUD()
     local hudScene = SCENE_MANAGER:GetScene("hud")
-    hudScene:RegisterCallback("StateChange", function(oldState, newState)
-
+    hudScene:RegisterCallback("StateChange", function(_, newState)
         -- Don't change states if display should be forced to show
         if GFC.ForceShow then return end
 
