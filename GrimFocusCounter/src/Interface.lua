@@ -201,69 +201,70 @@ end
 function GFC:SlashCommand(command)
     -- Debug Options ----------------------------------------------------------
     if command == "debug 0" then
-        d(self.prefix .. "Setting debug level to 0 (Off)")
+        self:Trace(0, "Setting debug level to 0 (Off)")
         self.debugMode = 0
         self.preferences.debugMode = 0
     elseif command == "debug 1" then
-        d(self.prefix .. "Setting debug level to 1 (Low)")
+        self:Trace(0, "Setting debug level to 1 (Low)")
         self.debugMode = 1
         self.preferences.debugMode = 1
     elseif command == "debug 2" then
-        d(self.prefix .. "Setting debug level to 2 (Medium)")
+        self:Trace(0, "Setting debug level to 2 (Medium)")
         self.debugMode = 2
         self.preferences.debugMode = 2
     elseif command == "debug 3" then
-        d(self.prefix .. "Setting debug level to 3 (High)")
+        self:Trace(0, "Setting debug level to 3 (High)")
         self.debugMode = 3
         self.preferences.debugMode = 3
 
         -- Position Options -------------------------------------------------------
     elseif command == "position reset" then
-        d(self.prefix .. "Resetting position to reticle")
+        self:Trace(0, "Resetting position to reticle")
         local tempPos = self.preferences.lockedToReticle
         self.preferences.lockedToReticle = true
         self.SetPosition()
         self.preferences.lockedToReticle = tempPos
     elseif command == "position show" then
-        d(self.prefix .. "Display position is set to: [" ..
-            self.preferences.positionTop ..
-            ", " ..
-            self.preferences.positionLeft ..
-            "]")
+        self:Trace(
+            0,
+            "Display position is set to: <<1>> x <<2>>",
+            self.preferences.positionTop,
+            self.preferences.positionLeft
+        )
     elseif command == "position lock" then
-        d(self.prefix .. "Locking display")
+        self:Trace(0, "Locking display")
         self.preferences.unlocked = false
         self.GFCContainer:SetMovable(false)
     elseif command == "position unlock" then
-        d(self.prefix .. "Unlocking display")
+        self:Trace(0, "Unlocking display")
         self.preferences.unlocked = true
         self.GFCContainer:SetMovable(true)
 
         -- Manage Registration ----------------------------------------------------
     elseif command == "register" then
-        d(self.prefix .. "Reregistering all events")
+        self:Trace(0, "Reregistering all events")
         self:UnregisterEvents()
         self:RegisterEvents()
     elseif command == "unregister" then
-        d(self.prefix .. "Unregistering all events")
+        self:Trace(0, "Unregistering all events")
         self:UnregisterEvents()
         self.abilityActive = false
         self.UpdateStacks(0)
     elseif command == "register unfiltered" then
-        d(self.prefix .. "Unregistering all events")
+        self:Trace(0, "Unregistering all events")
         self:UnregisterEvents()
         self.abilityActive = false
         self.UpdateStacks(0)
-        d(self.prefix .. "Registering for ALL events unfiltered")
+        self:Trace(0, "Registering for ALL events unfiltered")
         self.RegisterUnfilteredEvents()
     elseif command == "unregister unfiltered" then
-        d(self.prefix .. "Unregistering unfiltered events")
+        self:Trace(0, "Unregistering unfiltered events")
         self:UnregisterUnfilteredEvents()
         self.abilityActive = false
         self.UpdateStacks(0)
 
         -- Default ----------------------------------------------------------------
     else
-        d(self.prefix .. "Command not recognized!")
+        self:Trace(0, "Command not recognized!")
     end
 end

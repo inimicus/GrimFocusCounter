@@ -69,7 +69,7 @@ function GFC:Initialize(_, addonName)
         self:Trace(1, "Setting debug value to saved: " .. self.preferences.debugMode)
     end
 
-    SC[self.slash] = self.SlashCommand
+    SC[self.slash] = function(...) self:SlashCommand(...) end;
 
     self:InitSettings()
     self:DrawUI()
