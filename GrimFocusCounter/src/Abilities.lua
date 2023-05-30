@@ -6,6 +6,8 @@
 -- Abilities.lua
 -- -----------------------------------------------------------------------------
 
+local GFC = GFC
+
 --[[
     NOTE: As of Summerset PTS Week 1, all ranks of each morph
     use the Rank I Skill and Stack ID. This means we do not
@@ -32,7 +34,6 @@
         III:    64176   64177   Confirmed by Seldaris
         IV:     62096   62097   Confirmed by g4rr3t
 ]]
-
 GFC.ABILITIES = {
     GrimFocus = {
         Skill = 61902,
@@ -47,4 +48,3 @@ GFC.ABILITIES = {
         Stack = 61928,
     },
 }
-

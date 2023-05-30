@@ -6,6 +6,8 @@
 -- Defaults.lua
 -- -----------------------------------------------------------------------------
 
+local GFC = GFC
+
 local defaults = {
     debugMode = 0,
     showEmptyStacks = false,
@@ -16,10 +18,10 @@ local defaults = {
     unlocked = true,
     lockedToReticle = false,
     overlay = {
-        default   = false,
-        inactive  = false,
-        four      = false,
-        proc      = false,
+        default  = false,
+        inactive = false,
+        four     = false,
+        proc     = false,
     },
     colors = {
         default = {
@@ -49,6 +51,7 @@ local defaults = {
     },
     fadeInactive = false,
     fadeAmount = 90,
+    hideOutOfCombat = false,
 }
 
 function GFC:GetDefaults()
