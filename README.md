@@ -8,6 +8,7 @@ them in a visual and obvious way.
 </p>
 
 ## Purpose
+
 _But there are already buff trackers that display how many
 stacks there are. Why do I need this?_
 
@@ -27,6 +28,7 @@ for those who need a more obvious cue, don't run other buff
 trackers, or enjoy filling their screen with flair.
 
 ## Functionality
+
 The stack display can be configured to not appear until the first
 stack occurs or upon activation of the skill. Each stack will update
 the display as they happen and returns to a zero state or disappears
@@ -36,6 +38,7 @@ This add-on is _not_ intended to be a tracker for uptime on
 Grim Focus (or its morphs), just for the unique stacking mechanic.
 
 ## Implemented Features
+
 - Tracks Grim Focus, Merciless Resolve, Relentless Focus stacks
 - Select from different display styles
 - Customizable size
@@ -46,10 +49,12 @@ Grim Focus (or its morphs), just for the unique stacking mechanic.
 - Option to fade (transparency) of the stack display when the skill needs to be refreshed and still has stacks
 
 ## Planned Features
+
 - Additional style variations
 - Better colorization options
 
 ## Display Styles
+
 <table border="0" cellmargin="2">
     <tr>
         <td align="center">
@@ -91,9 +96,8 @@ Grim Focus (or its morphs), just for the unique stacking mechanic.
     </tr>
 </table>
 
-## Feedback & Contributing
-If you'd like to provide feedback, drop me a mail in-game to
-@g4rr3t. Any ideas of unique, interesting, and useful ways to
-display the stacks are welcome -- especially supporting artwork.
+## Bugs & Enhancements
+
+If you find a bug or would like to request a new feature, please [open an issue on GitHub](http://github.com/inimicus/GrimFocusCounter/issues/new/choose).
 
 # Enjoy!
