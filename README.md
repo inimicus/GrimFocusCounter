@@ -4,7 +4,7 @@ Track stacks of Grim Focus and its morphs and displays
 them in a visual and obvious way.
 
 <p align="center">
-    <img src="https://github.com/inimicus/GrimFocusCounter/blob/master/art/gifs/GrimFocusCounter.gif?raw=true"><br>
+    <img src="https://github.com/inimicus/GrimFocusCounter/blob/main/art/gifs/GrimFocusCounter.gif?raw=true"><br>
 </p>
 
 ## Purpose
@@ -58,39 +58,39 @@ Grim Focus (or its morphs), just for the unique stacking mechanic.
 <table border="0" cellmargin="2">
     <tr>
         <td align="center">
-            <img src="https://github.com/inimicus/GrimFocusCounter/blob/master/art/gifs/options/Compass.gif?raw=true" width="150" height="150"><br>
+            <img src="https://github.com/inimicus/GrimFocusCounter/blob/main/art/gifs/options/Compass.gif?raw=true" width="150" height="150"><br>
             Compass (by Porkjet)
         </td>
         <td align="center">
-            <img src="https://github.com/inimicus/GrimFocusCounter/blob/master/art/gifs/options/Dice.gif?raw=true" width="150" height="150"><br>
+            <img src="https://github.com/inimicus/GrimFocusCounter/blob/main/art/gifs/options/Dice.gif?raw=true" width="150" height="150"><br>
             Dice
         </td>
         <td align="center">
-            <img src="https://github.com/inimicus/GrimFocusCounter/blob/master/art/gifs/options/DOOM.gif?raw=true" width="150" height="150"><br>
+            <img src="https://github.com/inimicus/GrimFocusCounter/blob/main/art/gifs/options/DOOM.gif?raw=true" width="150" height="150"><br>
             DOOM
         </td>
         <td align="center">
-            <img src="https://github.com/inimicus/GrimFocusCounter/blob/master/art/gifs/options/HorizontalDots.gif?raw=true" width="150" height="150"><br>
+            <img src="https://github.com/inimicus/GrimFocusCounter/blob/main/art/gifs/options/HorizontalDots.gif?raw=true" width="150" height="150"><br>
             Horizontal Dots
         <td>
     </tr>
     <tr>
         <td align="center">
-            <img src="https://github.com/inimicus/GrimFocusCounter/blob/master/art/gifs/options/Numbers.gif?raw=true" width="150" height="150"><br>
+            <img src="https://github.com/inimicus/GrimFocusCounter/blob/main/art/gifs/options/Numbers.gif?raw=true" width="150" height="150"><br>
             Numbers
         </td>
         <td align="center">
-            <img src="https://github.com/inimicus/GrimFocusCounter/blob/master/art/gifs/options/NumberSquares.gif?raw=true" width="150" height="150"><br>
+            <img src="https://github.com/inimicus/GrimFocusCounter/blob/main/art/gifs/options/NumberSquares.gif?raw=true" width="150" height="150"><br>
             Number Squares
         </td>
         <td align="center">
-            <img src="https://github.com/inimicus/GrimFocusCounter/blob/master/art/gifs/options/PlayMagsorc.gif?raw=true" width="150" height="150"><br>
+            <img src="https://github.com/inimicus/GrimFocusCounter/blob/main/art/gifs/options/PlayMagsorc.gif?raw=true" width="150" height="150"><br>
             Play MagSorc
         </td>
         <td>&nbsp;</td>
     </tr>
         <td colspan="4" align="center">
-            <img src="https://github.com/inimicus/GrimFocusCounter/blob/master/art/gifs/options/Options.gif?raw=true" width="150" height="150"><br>
+            <img src="https://github.com/inimicus/GrimFocusCounter/blob/main/art/gifs/options/Options.gif?raw=true" width="150" height="150"><br>
             Color Overlay with option to fade display when skill expires
         </td>
     </tr>

@@ -3,7 +3,7 @@
 Track stacks of Grim Focus and its morphs and displays them in a visual and obvious way.
 
 [CENTER]
-[IMG]https://github.com/inimicus/GrimFocusCounter/blob/master/art/gifs/GrimFocusCounter.gif?raw=true[/IMG]
+[IMG]https://github.com/inimicus/GrimFocusCounter/blob/main/art/gifs/GrimFocusCounter.gif?raw=true[/IMG]
 [/CENTER]
 
 [SIZE=4][B][COLOR=Wheat]Purpose[/COLOR][/B][/SIZE]
@@ -32,13 +32,13 @@ This add-on is not intended to be a tracker for uptime on Grim Focus (or its mor
 [*]Option to fade (transparency) of the stack display when the skill needs to be refreshed and still has stacks[/LIST]
 
 [SIZE=4][B][COLOR=Wheat]Display Styles[/COLOR][/B][/SIZE]
-[IMG]https://github.com/inimicus/GrimFocusCounter/raw/master/art/gifs/options/Compass.gif?raw=true[/IMG][IMG]https://github.com/inimicus/GrimFocusCounter/raw/master/art/gifs/options/Dice.gif?raw=true[/IMG][IMG]https://github.com/inimicus/GrimFocusCounter/raw/master/art/gifs/options/DOOM.gif?raw=true[/IMG][IMG]https://github.com/inimicus/GrimFocusCounter/raw/master/art/gifs/options/HorizontalDots.gif?raw=true[/IMG]
+[IMG]https://github.com/inimicus/GrimFocusCounter/raw/main/art/gifs/options/Compass.gif?raw=true[/IMG][IMG]https://github.com/inimicus/GrimFocusCounter/raw/main/art/gifs/options/Dice.gif?raw=true[/IMG][IMG]https://github.com/inimicus/GrimFocusCounter/raw/main/art/gifs/options/DOOM.gif?raw=true[/IMG][IMG]https://github.com/inimicus/GrimFocusCounter/raw/main/art/gifs/options/HorizontalDots.gif?raw=true[/IMG]
 Compass (by Porkjet), Dice, DOOM, Horizontal Dots
 
-[IMG]https://github.com/inimicus/GrimFocusCounter/raw/master/art/gifs/options/Numbers.gif?raw=true[/IMG][IMG]https://github.com/inimicus/GrimFocusCounter/raw/master/art/gifs/options/NumberSquares.gif?raw=true[/IMG][IMG]https://github.com/inimicus/GrimFocusCounter/raw/master/art/gifs/options/PlayMagsorc.gif?raw=true[/IMG]
+[IMG]https://github.com/inimicus/GrimFocusCounter/raw/main/art/gifs/options/Numbers.gif?raw=true[/IMG][IMG]https://github.com/inimicus/GrimFocusCounter/raw/main/art/gifs/options/NumberSquares.gif?raw=true[/IMG][IMG]https://github.com/inimicus/GrimFocusCounter/raw/main/art/gifs/options/PlayMagsorc.gif?raw=true[/IMG]
 Numbers, Number Squares, Play Magsorc
 
-[IMG]https://github.com/inimicus/GrimFocusCounter/raw/master/art/gifs/options/Options.gif?raw=true[/IMG]
+[IMG]https://github.com/inimicus/GrimFocusCounter/raw/main/art/gifs/options/Options.gif?raw=true[/IMG]
 You can also add a color overlay and set fade when skill expires!
 
 [SIZE=4][COLOR=Wheat][B]Bugs & Enhancements[/B][/COLOR][/SIZE]
