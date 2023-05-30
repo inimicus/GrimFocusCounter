@@ -49,6 +49,7 @@ local defaults = {
     },
     fadeInactive = false,
     fadeAmount = 90,
+    hideOutOfCombat = false,
 }
 
 function GFC:GetDefaults()

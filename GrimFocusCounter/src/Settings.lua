@@ -17,6 +17,22 @@ local panelData = {
     registerForRefresh  = true,
 }
 
+local function setHideOutOfCombat(hide)
+    GFC.preferences.hideOutOfCombat = hide
+
+    if hide then
+        GFC:RegisterCombatEvent()
+        GFC.OnPlayerChanged()
+    else
+        GFC:UnregisterCombatEvent()
+        GFC:AddSceneFragments()
+    end
+end
+
+local function getHideOutOfCombat()
+    return GFC.preferences.hideOutOfCombat
+end
+
 local optionsTable = {
     {
         type = "header",
@@ -48,6 +64,14 @@ local optionsTable = {
     {
         type = "header",
         name = "Style",
+        width = "full",
+    },
+    {
+        type = "checkbox",
+        name = "Hide Out of Combat",
+        tooltip = "Hide the display when out of combat.",
+        getFunc = getHideOutOfCombat,
+        setFunc = setHideOutOfCombat,
         width = "full",
     },
     {
