@@ -8,15 +8,20 @@
 --
 -- Main.lua
 -- -----------------------------------------------------------------------------
-GFC             = {}
-GFC.name        = "GrimFocusCounter"
-GFC.version     = "1.5.0"
-GFC.dbVersion   = 1
-GFC.slash       = "/gfc"
-GFC.prefix      = "[GFC] "
-GFC.HUDHidden   = false
-GFC.ForceShow   = false
-GFC.isInCombat  = false
+GFC           = {}
+GFC.name      = "GrimFocusCounter"
+GFC.version   = "1.5.0"
+GFC.dbVersion = 1
+GFC.slash     = "/gfc"
+GFC.prefix    = "[GFC] "
+GFC.HUDHidden = false
+GFC.ForceShow = false
+
+-- -----------------------------------------------------------------------------
+-- Locals
+-- -----------------------------------------------------------------------------
+local EM      = EVENT_MANAGER
+local SC      = SLASH_COMMANDS
 
 -- -----------------------------------------------------------------------------
 -- Level of debug output
@@ -26,9 +31,9 @@ GFC.isInCombat  = false
 GFC.debugMode = 0
 -- -----------------------------------------------------------------------------
 
-function GFC:Trace(debugLevel, ...)
-    if debugLevel <= GFC.debugMode then
-        d(GFC.prefix .. ...)
+function GFC:Trace(debugLevel, message, ...)
+    if debugLevel <= self.debugMode then
+        d(zo_strformat(self.prefix .. message, ...))
     end
 end
 
@@ -36,45 +41,45 @@ end
 -- Startup
 -- -----------------------------------------------------------------------------
 
-function GFC.Initialize(event, addonName)
-    if addonName ~= GFC.name then return end
-
-    -- First trace uses above debugMode value until preferences are loaded.
-    -- The only way these two messages will appear is by changing the above
-    -- value to greater than 0.
-    -- Since these are only used during dev and QA, it should not impact
-    -- any user functionality or features.
+function GFC:Initialize(_, addonName)
     if GetUnitClassId("player") ~= 3 then
-        GFC:Trace(1, "Non-nightblade class detected, aborting addon initialization.")
-        EVENT_MANAGER:UnregisterForEvent(GFC.name, EVENT_ADD_ON_LOADED)
+        self:Trace(1, "Non-nightblade class detected, aborting addon initialization.")
+        EM:UnregisterForEvent(self.name, EVENT_ADD_ON_LOADED)
         return
     end
 
-    GFC:Trace(1, "GFC Loaded")
-    EVENT_MANAGER:UnregisterForEvent(GFC.name, EVENT_ADD_ON_LOADED)
+    if addonName ~= self.name then return end
 
-    GFC.preferences = ZO_SavedVars:NewAccountWide("GrimFocusCounterVariables", GFC.dbVersion, nil, GFC:GetDefaults())
-    GFC:UpgradeSettings()
+    self:Trace(1, "GFC Loaded")
+    EM:UnregisterForEvent(self.name, EVENT_ADD_ON_LOADED)
+
+    -- First two traces use above debugMode value until preferences are loaded.
+    -- The only way these messages will appear is by changing the above
+    -- value to greater than 0.
+    --
+    -- Since these are only used during dev and QA, it should not impact
+    -- any user functionality or features.
+
+    self.preferences = ZO_SavedVars:NewAccountWide("GrimFocusCounterVariables", self.dbVersion, nil, self:GetDefaults())
+    self:UpgradeSettings()
 
     -- Use saved debugMode value if the above value has not been changed
-    if GFC.debugMode == 0 then
-        GFC.debugMode = GFC.preferences.debugMode
-        GFC:Trace(1, "Setting debug value to saved: " .. GFC.preferences.debugMode)
+    if self.debugMode == 0 then
+        self.debugMode = self.preferences.debugMode
+        self:Trace(1, "Setting debug value to saved: " .. self.preferences.debugMode)
     end
 
-    SLASH_COMMANDS[GFC.slash] = GFC.SlashCommand
+    SC[self.slash] = self.SlashCommand
 
-    GFC:InitSettings()
-    GFC.DrawUI()
-    GFC.ToggleHUD()
-    GFC.RegisterEvents()
+    self:InitSettings()
+    self:DrawUI()
+    self:RegisterEvents()
 
-    GFC:Trace(2, "Finished Initialize()")
+    self:Trace(2, "Finished Initialize()")
 end
 
 -- -----------------------------------------------------------------------------
 -- Event Hooks
 -- -----------------------------------------------------------------------------
 
-EVENT_MANAGER:RegisterForEvent(GFC.name, EVENT_ADD_ON_LOADED, function(...) GFC.Initialize(...) end)
-
+EM:RegisterForEvent(GFC.name .. "_Init", EVENT_ADD_ON_LOADED, function(...) GFC:Initialize(...) end)
