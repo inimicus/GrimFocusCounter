@@ -98,9 +98,7 @@ function GFC:UpdateUI()
 
     if not active then
         GFC.SetSkillColorOverlay('inactive')
-    end
-
-    if stacks == 4 then
+    elseif stacks == 4 then
         GFC.SetSkillColorOverlay('four')
     elseif stacks == 5 then
         GFC.SetSkillColorOverlay('proc')
