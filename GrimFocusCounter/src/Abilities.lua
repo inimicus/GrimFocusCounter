@@ -9,6 +9,32 @@
 local GFC = GFC
 
 --[[
+    NOTE: As of Update 39 Week 1 PTS, the skill and stack IDs
+    further below have been replaced by a single ID per skill.
+
+    Investigating if there are different IDs per morph.
+
+    Merciless:
+        Rank    ID       Status
+        I:
+        II:
+        III:
+        IV:     122586   Confirmed by g4rr3t
+
+    Relentless:
+        Rank    ID       Status
+        I:
+        II:
+        III:
+        IV:     122587   Confirmed by g4rr3t
+
+    Grim:
+        Rank    ID       Status
+        I:
+        II:
+        III:
+        IV:     122585   Confirmed by g4rr3t
+
     NOTE: As of Summerset PTS Week 1, all ranks of each morph
     use the Rank I Skill and Stack ID. This means we do not
     need to be concerned with IDs for ranks II-IV anymore.
