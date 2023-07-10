@@ -7,6 +7,30 @@ them in a visual and obvious way.
     <img src="https://github.com/inimicus/GrimFocusCounter/blob/main/art/gifs/GrimFocusCounter.gif?raw=true"><br>
 </p>
 
+## Installation
+### From a Release
+After downloading a zip from the [releases page](https://github.com/inimicus/GrimFocusCounter/releases),
+unzip and move the `GrimFocusCounter` folder into your addons folder. Done, EZPZ.
+
+### From Code/Source
+Download a zip or clone this repository to obtain the source. Copy the
+`GrimFocusCounter` folder within the code (the one that has `GrimFocusCounter.txt`
+in it) into your AddOns folder. Do not copy the top level `GrimFocusCounter` (or
+`GrimFocusCounter-branchname` if you downloaded a zip) into your AddOns folder,
+it will not work.
+
+To illustrate:
+```
+GrimFocusCounter/       <-- Do not copy this folder
+├── art/
+├── GrimFocusCounter/   <-- Copy this folder
+│   ├── art/
+│   ├── src/
+│   └── GrimFocusCounter.txt
+├── README-esoui.txt
+└── README.md
+```
+
 ## Purpose
 
 _But there are already buff trackers that display how many
