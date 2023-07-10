@@ -2,8 +2,8 @@
 ## APIVersion: 101039
 ## SavedVariables: GrimFocusCounterVariables
 ## Description: Displays stacks of Grim Focus (and its morphs).
-## Version: 1.5.1
-## AddOnVersion: 10501
+## Version: 1.6.0
+## AddOnVersion: 10600
 ## Author: |cFFCCCC@g4rr3t|r (NA)
 ## DependsOn: LibAddonMenu-2.0>=28
 
