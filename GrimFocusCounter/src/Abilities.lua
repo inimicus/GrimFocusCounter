@@ -60,17 +60,18 @@ local GFC = GFC
         III:    64176   64177   Confirmed by Seldaris
         IV:     62096   62097   Confirmed by g4rr3t
 ]]
+
 GFC.ABILITIES = {
     GrimFocus = {
-        Skill = 61902,
-        Stack = 61905,
+        Skill = 122585,
+        Stack = 122585,
     },
     MercilessResolve = {
-        Skill = 61919,
-        Stack = 61920,
+        Skill = 122586,
+        Stack = 122586,
     },
     RelentlessFocus = {
-        Skill = 61927,
-        Stack = 61928,
+        Skill = 122587,
+        Stack = 122587,
     },
 }
