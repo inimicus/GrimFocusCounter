@@ -12,29 +12,20 @@ local GFC = GFC
     NOTE: As of Update 39 Week 1 PTS, the skill and stack IDs
     further below have been replaced by a single ID per skill.
 
-    Investigating if there are different IDs per morph.
+    skillType:      SKILL_TYPE_CLASS
+    skillLineIndex: 1 (Assassination)
+    skillIndex:     6 (Grim Focus, etc)
 
-    Merciless:
-        Rank    ID       Status
-        I:
-        II:
-        III:
-        IV:     122586   Confirmed by g4rr3t
+    + ------------------- + ------------------- + ----------- + -------------- +
+    | Ability Name        | Morph Slot          | Ability ID  | Ability Stack  |
+    + ------------------- + ------------------- + ----------- + -------------- +
+    | Grim Focus          | MORPH_SLOT_BASE     | 61902       | 122585         |
+    | Relentless Focus    | MORPH_SLOT_MORPH_1  | 61927       | 122587         |
+    | Merciless Resolve   | MORPH_SLOT_MORPH_2  | 61919       | 122586         |
+    + ------------------- + ------------------- + ----------- + -------------- +
+]]
 
-    Relentless:
-        Rank    ID       Status
-        I:
-        II:
-        III:
-        IV:     122587   Confirmed by g4rr3t
-
-    Grim:
-        Rank    ID       Status
-        I:
-        II:
-        III:
-        IV:     122585   Confirmed by g4rr3t
-
+--[[
     NOTE: As of Summerset PTS Week 1, all ranks of each morph
     use the Rank I Skill and Stack ID. This means we do not
     need to be concerned with IDs for ranks II-IV anymore.
@@ -61,17 +52,11 @@ local GFC = GFC
         IV:     62096   62097   Confirmed by g4rr3t
 ]]
 
-GFC.ABILITIES = {
-    GrimFocus = {
-        Skill = 122585,
-        Stack = 122585,
-    },
-    MercilessResolve = {
-        Skill = 122586,
-        Stack = 122586,
-    },
-    RelentlessFocus = {
-        Skill = 122587,
-        Stack = 122587,
-    },
+GFC.skillType      = SKILL_TYPE_CLASS
+GFC.skillLineIndex = 1 -- Assassination
+GFC.skillIndex     = 6 -- Grim Focus, etc
+GFC.skills         = {
+    [61902] = 122585,  -- Grim Focus
+    [61927] = 122587,  -- Relentless Focus
+    [61919] = 122586,  -- Merciless Resolve
 }

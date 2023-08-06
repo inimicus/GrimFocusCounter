@@ -22,23 +22,30 @@ local panelData = {
 -- Helper functions to set/get settings
 -- -----------------------------------------------------------------------------
 
+--- Update the hideOutOfCombat settings
+--- @param hide boolean True to hide when out of combat
+--- @return nil
 local function setHideOutOfCombat(hide)
     GFC.preferences.hideOutOfCombat = hide
 
     if hide then
         GFC:RegisterCombatEvent()
-        GFC.OnPlayerChanged()
+        GFC:OnPlayerChanged()
     else
         GFC:UnregisterCombatEvent()
         GFC:AddSceneFragments()
     end
 end
 
+--- Get the hideOutOfCombat setting
+--- @return boolean hide True when hideOutOfCombat is enabled
 local function getHideOutOfCombat()
     return GFC.preferences.hideOutOfCombat
 end
 
--- Locked State
+-- Locked the locked state
+--- @param control any Button control to update text label for
+--- @return nil
 function ToggleLocked(control)
     GFC.preferences.unlocked = not GFC.preferences.unlocked
     GFC.GFCContainer:SetMovable(GFC.preferences.unlocked)
@@ -49,7 +56,9 @@ function ToggleLocked(control)
     end
 end
 
--- Force Showing
+--- Force show the display
+--- @param control any Button control to update text label for
+--- @return nil
 function ForceShow(control)
     GFC.ForceShow = not GFC.ForceShow
     if GFC.ForceShow then
@@ -61,11 +70,13 @@ function ForceShow(control)
         control:SetText("Show")
         GFC.HUDHidden = true
         GFC.GFCContainer:SetHidden(true)
-        GFC.OnPlayerChanged()
+        GFC:OnPlayerChanged()
     end
 end
 
--- Textures
+--- Update the selected texture
+--- @param value string Texture picker selection value
+--- @return nil
 function SetTexture(value)
     local selectedTexture = nil
 
@@ -87,41 +98,64 @@ function SetTexture(value)
     end
 end
 
+--- Get the selected texture's picker option
+--- @return string value Picker texture
 function GetTexture()
     local selectedTexture = GFC.preferences.selectedTexture
     return GFC.TEXTURE_VARIANTS[selectedTexture].picker
 end
 
--- Sizing
+--- Set the display size
+--- @param value integer Display size
+--- @return nil
 function SetSize(value)
     GFC.preferences.size = value
     GFC.GFCContainer:SetDimensions(value, value)
     GFC.GFCTexture:SetDimensions(value, value)
 end
 
+--- Get the display size
+--- @return integer
 function GetSize()
     return GFC.preferences.size
 end
 
--- Zero Stacks
+--- Set the showEmptyStacks value
+--- @param value boolean True to enable showing empty (zero) stacks
+--- @return nil
 function SetZeroStacks(value)
     GFC.preferences.showEmptyStacks = value
 end
 
+--- Get the showEmptyStacks value
+--- @return boolean value True to show empty (zero) stacks
 function GetZeroStacks()
     return GFC.preferences.showEmptyStacks
 end
 
--- Color Overlay
+--- Set the color overlay for the given overlay type
+--- @param overlayType string The overlay type
+--- @param value boolean True to enable color overlay for the given overlay type
+--- @return nil
 function SetColorOverlay(overlayType, value)
     GFC.preferences.overlay[overlayType] = value
     GFC.SetSkillColorOverlay('default')
 end
 
-function GetColorOverlay(overlayType, key)
+--- Get the color overlay for a given type
+--- @param overlayType string The overlay type
+--- @return boolean value True when color overlay is enabled for the given overlay type
+function GetColorOverlay(overlayType)
     return GFC.preferences.overlay[overlayType]
 end
 
+--- Set the color overlay values for the given overlay type
+--- @param overlayType string The overlay type
+--- @param r integer Red value
+--- @param g integer Green value
+--- @param b integer Blue value
+--- @param a integer Alpha value
+--- @return nil
 function SetColor(overlayType, r, g, b, a)
     GFC.preferences.colors[overlayType] = {
         r = r,
@@ -132,6 +166,9 @@ function SetColor(overlayType, r, g, b, a)
     GFC.SetSkillColorOverlay('default')
 end
 
+--- Get color values for the given overlay type
+--- @param overlayType string The overlay type to get color values for
+--- @return integer r, integer g, integer b, integer a
 function GetColor(overlayType)
     return GFC.preferences.colors[overlayType].r,
         GFC.preferences.colors[overlayType].g,
@@ -139,7 +176,9 @@ function GetColor(overlayType)
         GFC.preferences.colors[overlayType].a
 end
 
--- Fade
+--- Set if the display should fade when inactive
+--- @param value boolean True to enable skill fade
+--- @return nil
 function SetFade(value)
     -- Note: To avoid having to change alpha every time,
     -- even if we never wanted to fade in the first place,
@@ -150,24 +189,35 @@ function SetFade(value)
     GFC.preferences.fadeInactive = value
 end
 
+--- Get the fadeInactive value
+--- @return boolean fadeInactive True to fade when inactive
 function GetFade()
     return GFC.preferences.fadeInactive
 end
 
+--- Set the amount to fade when inactive
+--- @param value integer Amount to fade
+--- @return nil
 function SetFadeAmount(value)
     GFC.preferences.fadeAmount = value
     GFC.SetSkillFade()
 end
 
+--- Get the amount to fade when inactive
+--- @return integer value Amount to fade
 function GetFadeAmount()
     return GFC.preferences.fadeAmount
 end
 
--- Lock to Reticle
+--- Set if the display should be locked to reticle
+--- @param value boolean True to lock to reticle
+--- @return nil
 local function setLockReticle(value)
     GFC:LockToReticle(value)
 end
 
+--- Get the lock to reticle setting
+--- @return boolean value True to lock to reticle
 local function getLockReticle()
     return GFC.preferences.lockedToReticle
 end
@@ -387,10 +437,9 @@ local optionsTable = {
         },
     },
 }
--- -----------------------------------------------------------------------------
--- Initialize Settings
--- -----------------------------------------------------------------------------
 
+--- Initialize settings
+--- @return nil
 function GFC:InitSettings()
     LAM:RegisterAddonPanel(self.name, panelData)
     LAM:RegisterOptionControls(self.name, optionsTable)
@@ -398,10 +447,8 @@ function GFC:InitSettings()
     self:Trace(2, "Finished InitSettings()")
 end
 
--- -----------------------------------------------------------------------------
--- Settings Upgrade Function
--- -----------------------------------------------------------------------------
-
+--- Upgrade settings
+--- @return nil
 function GFC:UpgradeSettings()
     -- Check if we've already upgraded
     if self.preferences.colorOverlay == nil and self.preferences.color == nil then return end

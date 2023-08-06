@@ -9,6 +9,8 @@
 local WM = WINDOW_MANAGER
 local GFC = GFC
 
+--- Add fragments to HUD and UI scenes
+--- @return nil
 function GFC:AddSceneFragments()
     if not self.fragment then
         self.fragment = ZO_SimpleSceneFragment:New(self.GFCContainer)
@@ -17,6 +19,8 @@ function GFC:AddSceneFragments()
     end
 end
 
+--- Remove fragments from the HUD and UI scenes
+--- @return nil
 function GFC:RemoveSceneFragments()
     if self.fragment then
         HUD_UI_SCENE:RemoveFragment(self.fragment)
@@ -25,6 +29,8 @@ function GFC:RemoveSceneFragments()
     end
 end
 
+--- Draw the main UI elements
+--- @return nil
 function GFC:DrawUI()
     local c = WM:CreateTopLevelWindow("GFCContainer")
     c:SetClampedToScreen(true)
@@ -71,6 +77,9 @@ function GFC:DrawUI()
     self:Trace(2, "Finished DrawUI()")
 end
 
+--- Set the color overlay for the given type
+--- @param overlayType string Type of color overlay to apply
+--- @return nil
 function GFC.SetSkillColorOverlay(overlayType)
     -- Read saved color
     local color = GFC.preferences.colors[overlayType]
@@ -90,13 +99,15 @@ function GFC.SetSkillColorOverlay(overlayType)
     end
 end
 
+--- Update the addon UI based on current stacks and slotted state
+--- @return nil
 function GFC:UpdateUI()
     local stacks = self.currentStacks
-    local active = self.abilityActive
+    local slotted = self.skillSlotted
 
-    GFC.SetSkillFade(not active)
+    GFC.SetSkillFade(not slotted)
 
-    if not active then
+    if not slotted then
         GFC.SetSkillColorOverlay('inactive')
     elseif stacks == 4 then
         GFC.SetSkillColorOverlay('four')
@@ -109,6 +120,9 @@ function GFC:UpdateUI()
     GFC.UpdateStacks(stacks)
 end
 
+--- Set the faded state
+--- @param faded boolean True to fade the display
+--- @return nil
 function GFC.SetSkillFade(faded)
     -- Only change fade if our options want us to fade
     if GFC.preferences.fadeInactive then
@@ -121,6 +135,8 @@ function GFC.SetSkillFade(faded)
     end
 end
 
+--- Toggle scene fragments
+--- @return nil
 function GFC:ToggleHUD()
     if self.fragment then
         self:RemoveSceneFragments()
@@ -131,6 +147,9 @@ function GFC:ToggleHUD()
     self:Trace(2, "Finished ToggleHUD()")
 end
 
+--- Set the locked to reticle state
+--- @param lockToReticle boolean True to lock to reticle
+--- @return nil
 function GFC:LockToReticle(lockToReticle)
     if lockToReticle then
         self.preferences.lockedToReticle = true
@@ -142,11 +161,15 @@ function GFC:LockToReticle(lockToReticle)
     self.SetPosition(self.preferences.positionLeft, self.preferences.positionTop)
 end
 
+--- Handler for when moving the display stops
+--- @return nil
 function GFC:OnMoveStop()
     self:Trace(1, "Moved")
     self:SavePosition()
 end
 
+--- Save the current display position
+--- @return nil
 function GFC:SavePosition()
     local top = self.GFCContainer:GetTop()
     local left = self.GFCContainer:GetLeft()
@@ -161,6 +184,10 @@ function GFC:SavePosition()
     self.preferences.positionTop  = top
 end
 
+--- Set the display position
+--- @param left number|nil Left position, optional when lockedToReticle enabled
+--- @param top number|nil Top position, optional when lockedToReticle enabled
+--- @return nil
 function GFC.SetPosition(left, top)
     if GFC.preferences.lockedToReticle then
         local height = GuiRoot:GetHeight()
@@ -174,6 +201,9 @@ function GFC.SetPosition(left, top)
     end
 end
 
+--- Update the number of stacks to display
+--- @param stackCount integer Number of stacks to display
+--- @return nil
 function GFC.UpdateStacks(stackCount)
     local stackFrame
 
@@ -196,24 +226,27 @@ function GFC.UpdateStacks(stackCount)
     GFC.GFCTexture:SetTextureCoords(GFC.TEXTURE_FRAMES[stackFrame].REL, GFC.TEXTURE_FRAMES[stackFrame + 1].REL, 0, 1)
 end
 
+--- Handle slash command input
+--- @param command string Slash command input
+--- @return nil
 function GFC:SlashCommand(command)
     -- Debug Options ----------------------------------------------------------
-    if command == "debug 0" then
+    if command == "debug 0" or command == "debug off" then
         self:Trace(0, "Setting debug level to 0 (Off)")
-        self.debugMode = 0
-        self.preferences.debugMode = 0
-    elseif command == "debug 1" then
+        self.debugMode = self.debugModes.off
+        self.preferences.debugMode = self.debugModes.off
+    elseif command == "debug 1" or command == "debug low" then
         self:Trace(0, "Setting debug level to 1 (Low)")
-        self.debugMode = 1
-        self.preferences.debugMode = 1
-    elseif command == "debug 2" then
+        self.debugMode = self.debugModes.low
+        self.preferences.debugMode = self.debugModes.low
+    elseif command == "debug 2" or command == "debug medium" then
         self:Trace(0, "Setting debug level to 2 (Medium)")
-        self.debugMode = 2
-        self.preferences.debugMode = 2
-    elseif command == "debug 3" then
+        self.debugMode = self.debugModes.medium
+        self.preferences.debugMode = self.debugModes.medium
+    elseif command == "debug 3" or command == "debug high" then
         self:Trace(0, "Setting debug level to 3 (High)")
-        self.debugMode = 3
-        self.preferences.debugMode = 3
+        self.debugMode = self.debugModes.high
+        self.preferences.debugMode = self.debugModes.high
 
         -- Position Options -------------------------------------------------------
     elseif command == "position reset" then
