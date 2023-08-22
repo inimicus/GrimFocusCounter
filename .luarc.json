@@ -1,13 +1,17 @@
 {
-  "$schema": "https://raw.githubusercontent.com/sumneko/vscode-lua/master/setting/schema.json",
-  "Lua.runtime.version": "Lua 5.1",
-  "Lua.workspace.library": ["../eso-api-lua-intellij-baertram_API101038"],
-  "diagnostics.globals": [
-    "GuiRoot",
-    "HUD_SCENE",
-    "HUD_UI_SCENE",
-    "LibAddonMenu2",
-    "SLASH_COMMANDS",
-    "WINDOW_MANAGER"
-  ]
+    "$schema": "https://raw.githubusercontent.com/sumneko/vscode-lua/master/setting/schema.json",
+    "Lua.runtime.version": "Lua 5.1",
+    "Lua.workspace.library": [
+        "../eso-api-lua-intellij-baertram_API101038"
+    ],
+    "diagnostics.globals": [
+        "ACTION_BAR_ASSIGNMENT_MANAGER",
+        "SKILLS_DATA_MANAGER",
+        "GuiRoot",
+        "HUD_SCENE",
+        "HUD_UI_SCENE",
+        "LibAddonMenu2",
+        "SLASH_COMMANDS",
+        "WINDOW_MANAGER"
+    ]
 }

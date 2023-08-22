@@ -8,32 +8,46 @@
 --
 -- Main.lua
 -- -----------------------------------------------------------------------------
-GFC           = {}
-GFC.name      = "GrimFocusCounter"
-GFC.version   = "1.5.1"
-GFC.dbVersion = 1
-GFC.slash     = "/gfc"
-GFC.prefix    = "[GFC] "
-GFC.HUDHidden = false
-GFC.ForceShow = false
 
--- -----------------------------------------------------------------------------
--- Locals
--- -----------------------------------------------------------------------------
-local EM      = EVENT_MANAGER
-local SC      = SLASH_COMMANDS
+--- @type table Global addon table
+GFC            = {}
+--- @type string Addon name
+GFC.name       = "GrimFocusCounter"
+--- @type string Addon version, human readable
+GFC.version    = "1.6.0"
+--- @type integer Saved variables database version
+GFC.dbVersion  = 1
+--- @type string Slash command string
+GFC.slash      = "/gfc"
+--- @type string Chat output prefix
+GFC.prefix     = "[GFC] "
+--- @type boolean True when the HUD is hidden
+GFC.HUDHidden  = false
+--- @type boolean True when UI is requested to be always shown
+GFC.ForceShow  = false
 
--- -----------------------------------------------------------------------------
--- Level of debug output
--- 1: Low    - Basic debug info, show core functionality
--- 2: Medium - More information about skills and addon details
--- 3: High   - Everything
-GFC.debugMode = 0
--- -----------------------------------------------------------------------------
+-- Local assignment of globals
+local EM       = EVENT_MANAGER
+local SC       = SLASH_COMMANDS
 
-function GFC:Trace(debugLevel, message, ...)
+--- @enum debugModes table
+GFC.debugModes = {
+    off    = 0, -- Disable debug messages
+    low    = 1, -- Basic debug info, show core functionality
+    medium = 2, -- More information about skills and addon details
+    high   = 3, -- Everything
+}
+
+--- @type debugModes
+GFC.debugMode  = GFC.debugModes.off
+
+--- Output a debug message
+--- @param debugLevel debugModes Debug level to output
+--- @param ... any Message to output, formatted via zo_strformat()
+--- @return nil
+function GFC:Trace(debugLevel, ...)
     if debugLevel <= self.debugMode then
-        d(zo_strformat(self.prefix .. message, ...))
+        d(self.prefix .. zo_strformat(...))
     end
 end
 
@@ -41,6 +55,10 @@ end
 -- Startup
 -- -----------------------------------------------------------------------------
 
+--- Initialize the addon
+--- @param _ integer Addon loaded event ID
+--- @param addonName string Name of the addon that loaded
+--- @return nil
 function GFC:Initialize(_, addonName)
     if GetUnitClassId("player") ~= 3 then
         self:Trace(1, "Non-nightblade class detected, aborting addon initialization.")
@@ -73,7 +91,8 @@ function GFC:Initialize(_, addonName)
 
     self:InitSettings()
     self:DrawUI()
-    self:RegisterEvents()
+    self:RegisterHotbarEvents()
+    self:OnPlayerChanged()
 
     self:Trace(2, "Finished Initialize()")
 end
@@ -82,4 +101,12 @@ end
 -- Event Hooks
 -- -----------------------------------------------------------------------------
 
-EM:RegisterForEvent(GFC.name .. "_Init", EVENT_ADD_ON_LOADED, function(...) GFC:Initialize(...) end)
+--- Wrapper for GFC initalize function
+--- @param eventId integer Addon loaded event ID
+--- @param addonName string Name of the addon that loaded
+--- @return nil
+local function init(eventId, addonName)
+    GFC:Initialize(eventId, addonName)
+end
+
+EM:RegisterForEvent(GFC.name .. "_Init", EVENT_ADD_ON_LOADED, init)
