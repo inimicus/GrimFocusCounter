@@ -78,14 +78,6 @@ function GFC:RegisterStacksForId(abilityId)
         REGISTER_FILTER_SOURCE_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_PLAYER
     )
 
-    EM:RegisterForEvent(self.name .. "SkillCombat", EVENT_COMBAT_EVENT, function()
-        GFC:Trace(0, "Skill combat event changed")
-    end)
-    EM:AddFilterForEvent(self.name .. "SkillCombat", EVENT_COMBAT_EVENT,
-        REGISTER_FILTER_ABILITY_ID, abilityId,
-        REGISTER_FILTER_SOURCE_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_PLAYER
-    )
-
     self.trackedAbilityId = abilityId
 end
 
