@@ -17,7 +17,7 @@ local panelData = {
     author             = "g4rr3t",
     version            = GFC.version,
     registerForRefresh = true,
-    slashCommand       = "/gfc",
+    slashCommand       = "/gfcs",
 }
 
 -- -----------------------------------------------------------------------------
