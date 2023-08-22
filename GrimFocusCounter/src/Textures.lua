@@ -8,13 +8,15 @@
 
 local GFC = GFC
 
+--- @type table<string, integer> Texture dimensions
 GFC.TEXTURE_SIZE = {
-    FRAME_HEIGHT = 128,     -- Height of each texture frame
-    FRAME_WIDTH  = 128,     -- Width of each texture frame
-    ASSET_WIDTH  = 1024,    -- Overall texture width
-    ASSET_HEIGHT = 128,     -- Overall texture height
+    FRAME_HEIGHT = 128,  -- Height of each texture frame
+    FRAME_WIDTH  = 128,  -- Width of each texture frame
+    ASSET_WIDTH  = 1024, -- Overall texture width
+    ASSET_HEIGHT = 128,  -- Overall texture height
 }
 
+--- @type table{ name: string, asset: string, picker: string }[] Supported texture variants
 GFC.TEXTURE_VARIANTS = {
     [0] = {
         name   = "Color Squares",
@@ -68,14 +70,15 @@ GFC.TEXTURE_VARIANTS = {
     },
 }
 
+--- @type table{ ABS: integer, REL: number }[] Frame coordinates of the texture
 GFC.TEXTURE_FRAMES = {
-    [0] = { ABS = 0, REL = 0.0 },      -- No stacks
-    [1] = { ABS = 128, REL = 0.125 },  -- Stack #1
-    [2] = { ABS = 256, REL = 0.25 },   -- Stack #2
-    [3] = { ABS = 384, REL = 0.375 },  -- Stack #3
-    [4] = { ABS = 512, REL = 0.5 },    -- Stack #4
-    [5] = { ABS = 640, REL = 0.625 },  -- Stack #5
-    [6] = { ABS = 768, REL = 0.75 },   -- Empty stack indicator
-    [7] = { ABS = 896, REL = 0.875 },  -- Skill active indicator
-    [8] = { ABS = 1024, REL = 1.0 },   -- End of texture
+    [0] = { ABS = 0, REL = 0.0 },     -- No stacks
+    [1] = { ABS = 128, REL = 0.125 }, -- Stack #1
+    [2] = { ABS = 256, REL = 0.25 },  -- Stack #2
+    [3] = { ABS = 384, REL = 0.375 }, -- Stack #3
+    [4] = { ABS = 512, REL = 0.5 },   -- Stack #4
+    [5] = { ABS = 640, REL = 0.625 }, -- Stack #5
+    [6] = { ABS = 768, REL = 0.75 },  -- Empty stack indicator
+    [7] = { ABS = 896, REL = 0.875 }, -- Skill active indicator
+    [8] = { ABS = 1024, REL = 1.0 },  -- End of texture
 }

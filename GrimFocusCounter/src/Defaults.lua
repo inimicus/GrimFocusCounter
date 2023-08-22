@@ -66,6 +66,8 @@ local defaults = {
     fadeAmount = 90,
     --- @type boolean
     hideOutOfCombat = false,
+    --- @type boolean
+    alwaysShow = false,
 }
 
 --- Get the addon defaults

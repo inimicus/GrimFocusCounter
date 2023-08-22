@@ -9,10 +9,13 @@
 local WM = WINDOW_MANAGER
 local GFC = GFC
 
+GFC.fragment = nil
+
 --- Add fragments to HUD and UI scenes
 --- @return nil
 function GFC:AddSceneFragments()
     if not self.fragment then
+        self:Trace(2, "Adding scene fragments")
         self.fragment = ZO_SimpleSceneFragment:New(self.GFCContainer)
         HUD_UI_SCENE:AddFragment(self.fragment)
         HUD_SCENE:AddFragment(self.fragment)
@@ -23,6 +26,7 @@ end
 --- @return nil
 function GFC:RemoveSceneFragments()
     if self.fragment then
+        self:Trace(2, "Removing scene fragments")
         HUD_UI_SCENE:RemoveFragment(self.fragment)
         HUD_SCENE:RemoveFragment(self.fragment)
         self.fragment = nil
@@ -39,7 +43,7 @@ function GFC:DrawUI()
     c:SetMouseEnabled(true)
     c:SetAlpha(1)
     c:SetMovable(self.preferences.unlocked)
-    c:SetHidden(false)
+    c:SetHidden(true)
     c:SetHandler("OnMoveStop", function() self:SavePosition() end)
     c:SetHandler("OnMouseEnter", function()
         if self.preferences.unlocked then
@@ -70,9 +74,7 @@ function GFC:DrawUI()
     self.GFCContainer = c
     self.GFCTexture = t
 
-    self:ToggleHUD()
-    self.SetPosition(self.preferences.positionLeft, self.preferences.positionTop)
-    self.SetSkillColorOverlay('default')
+    self:SetPosition(self.preferences.positionLeft, self.preferences.positionTop)
 
     self:Trace(2, "Finished DrawUI()")
 end
@@ -80,21 +82,21 @@ end
 --- Set the color overlay for the given type
 --- @param overlayType string Type of color overlay to apply
 --- @return nil
-function GFC.SetSkillColorOverlay(overlayType)
+function GFC:SetSkillColorOverlay(overlayType)
     -- Read saved color
-    local color = GFC.preferences.colors[overlayType]
+    local color = self.preferences.colors[overlayType]
 
-    if GFC.preferences.overlay[overlayType] then
+    if self.preferences.overlay[overlayType] then
         -- Set active color overlay
-        GFC.GFCTexture:SetColor(color.r, color.g, color.b, color.a)
+        self.GFCTexture:SetColor(color.r, color.g, color.b, color.a)
     else
         -- Set to default if it's set
-        if GFC.preferences.overlay.default then
-            local default = GFC.preferences.colors.default
-            GFC.GFCTexture:SetColor(default.r, default.g, default.b, default.a)
+        if self.preferences.overlay.default then
+            local default = self.preferences.colors.default
+            self.GFCTexture:SetColor(default.r, default.g, default.b, default.a)
         else
             -- Set to white AKA none if no default set
-            GFC.GFCTexture:SetColor(1, 1, 1, 1)
+            self.GFCTexture:SetColor(1, 1, 1, 1)
         end
     end
 end
@@ -104,34 +106,33 @@ end
 function GFC:UpdateUI()
     local stacks = self.currentStacks
     local slotted = self.skillSlotted
+    local fadeInactive = self.preferences.fadeInactive
 
-    GFC.SetSkillFade(not slotted)
+    self:SetSkillFade(not slotted and fadeInactive)
 
     if not slotted then
-        GFC.SetSkillColorOverlay('inactive')
+        self:SetSkillColorOverlay('inactive')
     elseif stacks == 4 then
-        GFC.SetSkillColorOverlay('four')
+        self:SetSkillColorOverlay('four')
     elseif stacks == 5 then
-        GFC.SetSkillColorOverlay('proc')
+        self:SetSkillColorOverlay('proc')
     else
-        GFC.SetSkillColorOverlay('default')
+        self:SetSkillColorOverlay('default')
     end
 
-    GFC.UpdateStacks(stacks)
+    self:UpdateStacks(stacks)
 end
 
 --- Set the faded state
 --- @param faded boolean True to fade the display
 --- @return nil
-function GFC.SetSkillFade(faded)
+function GFC:SetSkillFade(faded)
     -- Only change fade if our options want us to fade
-    if GFC.preferences.fadeInactive then
-        if faded then
-            local alpha = GFC.preferences.fadeAmount / 100
-            GFC.GFCContainer:SetAlpha(alpha)
-        else
-            GFC.GFCContainer:SetAlpha(1)
-        end
+    if self.preferences.fadeInactive and faded then
+        local alpha = self.preferences.fadeAmount / 100
+        self.GFCContainer:SetAlpha(alpha)
+    else
+        self.GFCContainer:SetAlpha(1)
     end
 end
 
@@ -158,7 +159,7 @@ function GFC:LockToReticle(lockToReticle)
         self.preferences.lockedToReticle = false
         self:Trace(1, "Unlocked from Reticle")
     end
-    self.SetPosition(self.preferences.positionLeft, self.preferences.positionTop)
+    self:SetPosition(self.preferences.positionLeft, self.preferences.positionTop)
 end
 
 --- Handler for when moving the display stops
@@ -188,42 +189,42 @@ end
 --- @param left number|nil Left position, optional when lockedToReticle enabled
 --- @param top number|nil Top position, optional when lockedToReticle enabled
 --- @return nil
-function GFC.SetPosition(left, top)
-    if GFC.preferences.lockedToReticle then
+function GFC:SetPosition(left, top)
+    if self.preferences.lockedToReticle then
         local height = GuiRoot:GetHeight()
 
-        GFC.GFCContainer:ClearAnchors()
-        GFC.GFCContainer:SetAnchor(CENTER, GuiRoot, TOP, 0, height / 2)
+        self.GFCContainer:ClearAnchors()
+        self.GFCContainer:SetAnchor(CENTER, GuiRoot, TOP, 0, height / 2)
     else
-        GFC:Trace(2, "Setting - Left: " .. left .. " Top: " .. top)
-        GFC.GFCContainer:ClearAnchors()
-        GFC.GFCContainer:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, left, top)
+        self:Trace(2, "Setting - Left: " .. left .. " Top: " .. top)
+        self.GFCContainer:ClearAnchors()
+        self.GFCContainer:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, left, top)
     end
 end
 
 --- Update the number of stacks to display
 --- @param stackCount integer Number of stacks to display
 --- @return nil
-function GFC.UpdateStacks(stackCount)
+function GFC:UpdateStacks(stackCount)
     local stackFrame
 
     -- Ignore missing stackCount
     if not stackCount then return end
 
     if stackCount > 0 then
-        GFC:Trace(1, "Stack #<<1>>", stackCount)
+        self:Trace(1, "Stack #<<1>>", stackCount)
         stackFrame = stackCount
     else
-        if GFC.preferences.showEmptyStacks then
-            GFC:Trace(1, "Stack #0 (Show Empty)")
+        if self.preferences.showEmptyStacks then
+            self:Trace(1, "Stack #0 (Show Empty)")
             stackFrame = 6
         else
-            GFC:Trace(1, "Stack #0")
+            self:Trace(1, "Stack #0")
             stackFrame = 0
         end
     end
 
-    GFC.GFCTexture:SetTextureCoords(GFC.TEXTURE_FRAMES[stackFrame].REL, GFC.TEXTURE_FRAMES[stackFrame + 1].REL, 0, 1)
+    self.GFCTexture:SetTextureCoords(self.TEXTURE_FRAMES[stackFrame].REL, self.TEXTURE_FRAMES[stackFrame + 1].REL, 0, 1)
 end
 
 --- Handle slash command input
@@ -253,7 +254,7 @@ function GFC:SlashCommand(command)
         self:Trace(0, "Resetting position to reticle")
         local tempPos = self.preferences.lockedToReticle
         self.preferences.lockedToReticle = true
-        self.SetPosition()
+        self:SetPosition()
         self.preferences.lockedToReticle = tempPos
     elseif command == "position show" then
         self:Trace(
@@ -280,19 +281,19 @@ function GFC:SlashCommand(command)
         self:Trace(0, "Unregistering all events")
         self:UnregisterEvents()
         self.abilityActive = false
-        self.UpdateStacks(0)
+        self:UpdateStacks(0)
     elseif command == "register unfiltered" then
         self:Trace(0, "Unregistering all events")
         self:UnregisterEvents()
         self.abilityActive = false
-        self.UpdateStacks(0)
+        self:UpdateStacks(0)
         self:Trace(0, "Registering for ALL events unfiltered")
         self.RegisterUnfilteredEvents()
     elseif command == "unregister unfiltered" then
         self:Trace(0, "Unregistering unfiltered events")
         self:UnregisterUnfilteredEvents()
         self.abilityActive = false
-        self.UpdateStacks(0)
+        self:UpdateStacks(0)
 
         -- Default ----------------------------------------------------------------
     else

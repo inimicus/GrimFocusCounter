@@ -26,6 +26,7 @@ GFC.HUDHidden  = false
 --- @type boolean True when UI is requested to be always shown
 GFC.ForceShow  = false
 
+-- Local assignment of globals
 local EM       = EVENT_MANAGER
 local SC       = SLASH_COMMANDS
 
@@ -90,7 +91,8 @@ function GFC:Initialize(_, addonName)
 
     self:InitSettings()
     self:DrawUI()
-    self:RegisterEvents()
+    self:RegisterHotbarEvents()
+    self:OnPlayerChanged()
 
     self:Trace(2, "Finished Initialize()")
 end

@@ -11,7 +11,9 @@
 --- @alias bool boolean
 
 local GFC = GFC
+local ABAM = ACTION_BAR_ASSIGNMENT_MANAGER
 local EM = EVENT_MANAGER
+local SDM = SKILLS_DATA_MANAGER
 
 --- @type integer Current number of stacks
 GFC.currentStacks = 0
@@ -22,19 +24,37 @@ GFC.skillSlotted = false
 --- @type boolean True when the player is in combat
 GFC.isInCombat = false
 
+--- @type table<string, boolean> Event registration tracking
+GFC.tracking = {
+    combat  = false,
+    changes = false,
+    hotbar  = false,
+}
+
+--- @type integer|nil Ability ID that tracking is active for, nil if none
+GFC.trackedAbilityId = nil
+
 --- Check action bars for slotted skill
---- @param abilityId integer Ability to check bars for
---- @return integer|nil slottedPosition Slot index of first found skill
-local function getSlottedPosition(abilityId)
-    local SKILL_BAR_FIRST_NORMAL_SLOT_INDEX = ACTION_BAR_FIRST_NORMAL_SLOT_INDEX + 1
-    local SKILL_BAR_LAST_NORMAL_SLOT_INDEX = ACTION_BAR_ULTIMATE_SLOT_INDEX
+--- @return integer|nil abilityId Ability ID of slotted skill, nil if no ability slotted
+local function getSlottedAbilityId()
+    local skillData = SDM:GetSkillDataByIndices(GFC.skillType, GFC.skillLineIndex, GFC.skillIndex)
+    if not skillData then
+        GFC:Trace(1, "Could not get skill data when checking for slotted skill")
+        return nil
+    end
 
-    for x = SKILL_BAR_FIRST_NORMAL_SLOT_INDEX, SKILL_BAR_LAST_NORMAL_SLOT_INDEX do
-        local slotPrimary = GetSlotBoundId(x, HOTBAR_CATEGORY_PRIMARY)
-        if slotPrimary == abilityId then return x end
+    local searchBars = {
+        [HOTBAR_CATEGORY_PRIMARY] = "primary",
+        [HOTBAR_CATEGORY_BACKUP] = "backup",
+    }
 
-        local slotBackup = GetSlotBoundId(x, HOTBAR_CATEGORY_BACKUP)
-        if slotBackup == abilityId then return x end
+    for hotbar, hotbarName in pairs(searchBars) do
+        local skillSlot = ABAM:GetHotbar(hotbar):FindSlotMatchingSkill(skillData)
+        if skillSlot then
+            local abilityId = skillData:GetCurrentProgressionData():GetAbilityId()
+            GFC:Trace(2, "Found skill on <<1>> hotbar, <<2>> (<<3>>)", hotbarName, GetAbilityName(abilityId), abilityId)
+            return abilityId
+        end
     end
 
     -- No skill matching ID slotted
@@ -45,6 +65,9 @@ end
 --- @param abilityId integer The ability ID to track stacks for
 --- @return nil
 function GFC:RegisterStacksForId(abilityId)
+    -- Skip updating tracking if the ability ID is already being tracked
+    if self.trackedAbilityId ~= nil and self.trackedAbilityId == abilityId then return end
+
     local stackId = self.skills[abilityId]
 
     GFC:Trace(2, "Registering <<1>> (<<2>>) for stackId <<3>>", GetAbilityName(abilityId), abilityId, stackId)
@@ -54,6 +77,16 @@ function GFC:RegisterStacksForId(abilityId)
         REGISTER_FILTER_ABILITY_ID, stackId,
         REGISTER_FILTER_SOURCE_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_PLAYER
     )
+
+    EM:RegisterForEvent(self.name .. "SkillCombat", EVENT_COMBAT_EVENT, function()
+        GFC:Trace(0, "Skill combat event changed")
+    end)
+    EM:AddFilterForEvent(self.name .. "SkillCombat", EVENT_COMBAT_EVENT,
+        REGISTER_FILTER_ABILITY_ID, abilityId,
+        REGISTER_FILTER_SOURCE_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_PLAYER
+    )
+
+    self.trackedAbilityId = abilityId
 end
 
 --- Check if Grim Focus (or one of its morphs) is slotted and register/unregister events accordingly
@@ -67,22 +100,18 @@ function GFC:CheckSkillSlotted()
         return false
     end
 
-    --- Return type of GetSkillAbilityId() has integer and abilityId reversed
-    --- Use `@as` to resolve diagnostic
-    local abilityId = GetSkillAbilityId(self.skillType, self.skillLineIndex, self.skillIndex, false) --[[@as integer]]
-    local abilityName = GetAbilityName(abilityId)
-    local slottedPosition = getSlottedPosition(abilityId)
+    local abilityId = getSlottedAbilityId()
 
     -- If skill is slotted
-    if slottedPosition ~= nil then
-        GFC:Trace(2, "Skill <<1>> (<<2>>) found in slot <<1>>, enabling", abilityName, abilityId, slottedPosition)
+    if abilityId ~= nil then
+        GFC:Trace(1, "Skill <<1>> (<<2>>) slotted, enabling", GetAbilityName(abilityId), abilityId)
         self:RegisterStacksForId(abilityId)
         return true
-    else
-        GFC:Trace(2, "Skill <<1>> (<<2>>) not slotted, disabling", abilityName, abilityId)
-        self:UnregisterStacks()
-        return false
     end
+
+    GFC:Trace(1, "Skill not slotted, disabling")
+    self:UnregisterStacks()
+    return false
 end
 
 --- Callback when hotbars have been updated, e.g. skill (un)slotted
@@ -92,13 +121,15 @@ local function hotbarsUpdated()
     GFC:OnPlayerChanged()
 end
 
---- Register addon events
+--- Register events for when tracking is enabled
 --- @return nil
-function GFC:RegisterEvents()
+function GFC:RegisterTrackingEvents()
     -- Combat enter/exit events
     if self.preferences.hideOutOfCombat then
         self:RegisterCombatEvent()
     end
+
+    if self.tracking.changes then return end
 
     local function onPlayerChanged()
         self:OnPlayerChanged()
@@ -112,76 +143,87 @@ function GFC:RegisterEvents()
     EM:RegisterForEvent(self.name .. "PlayerDead", EVENT_PLAYER_DEAD, onPlayerChanged)
     EM:RegisterForEvent(self.name .. "PlayerAlive", EVENT_PLAYER_ALIVE, onPlayerChanged)
 
+    self.tracking.changes = true
+end
+
+--- Unregister events for when tracking is disabled
+--- @return nil
+function GFC:UnregisterTrackingEvents()
+    self:UnregisterCombatEvent()
+
+    if not self.tracking.changes then return end
+
+    EM:UnregisterForEvent(self.name .. "PLAYER_ACTIVATED", EVENT_PLAYER_ACTIVATED)
+    EM:UnregisterForEvent(self.name .. "ZONE_UPDATE", EVENT_ZONE_UPDATE)
+    EM:UnregisterForEvent(self.name .. "PlayerDead", EVENT_PLAYER_DEAD)
+    EM:UnregisterForEvent(self.name .. "PlayerAlive", EVENT_PLAYER_ALIVE)
+
+    self.tracking.changes = false
+end
+
+--- Register monitoring events that determine when the skill is active
+--- @return nil
+function GFC:RegisterHotbarEvents()
+    if self.tracking.hotbar then return end
+
     EM:RegisterForEvent(self.name .. "HotbarUpdated", EVENT_ACTION_SLOTS_ALL_HOTBARS_UPDATED, hotbarsUpdated)
+    self.tracking.hotbar = true
+end
+
+--- Unregister tracking for hotbar events
+--- @return nil
+function GFC:UnregisterHotbarEvents()
+    if not self.tracking.hotbar then return end
+
+    EM:UnregisterForEvent(self.name .. "HotbarUpdated", EVENT_ACTION_SLOTS_ALL_HOTBARS_UPDATED)
+    self.tracking.hotbar = false
 end
 
 --- Register combat state tracking events
 --- @return nil
 function GFC:RegisterCombatEvent()
     -- Register start/end combat events
+    if self.tracking.combat then return end
+
     EM:RegisterForEvent(self.name .. "COMBAT_STATE", EVENT_PLAYER_COMBAT_STATE, function() self:OnPlayerChanged() end)
+    self.tracking.combat = true
 end
 
 --- Unregister combat state tracking events
 --- @return nil
 function GFC:UnregisterCombatEvent()
     -- Register start/end combat events
+    if not self.tracking.combat then return end
+
     EM:UnregisterForEvent(self.name .. "COMBAT_STATE", EVENT_PLAYER_COMBAT_STATE)
+    self.tracking.combat = false
 end
 
 --- Unregister stack tracking events
 --- @return nil
 function GFC:UnregisterStacks()
+    if self.trackedAbilityId == nil then return end
+
     GFC:Trace(2, "Unregistering stacks")
 
     EM:UnregisterForEvent(GFC.name .. 'Stack', EVENT_EFFECT_CHANGED)
-end
-
---- Unregister tracking events
---- @return nil
-function GFC:UnregisterEvents()
-    GFC:UnregisterCombatEvent()
-    EM:UnregisterForEvent(self.name .. "PLAYER_ACTIVATED", EVENT_PLAYER_ACTIVATED)
-    EM:UnregisterForEvent(self.name .. "ZONE_UPDATE", EVENT_ZONE_UPDATE)
-    EM:UnregisterForEvent(self.name .. "PlayerDead", EVENT_PLAYER_DEAD)
-    EM:UnregisterForEvent(self.name .. "PlayerAlive", EVENT_PLAYER_ALIVE)
-    EM:UnregisterForEvent(self.name .. "HotbarUpdated", EVENT_ACTION_SLOTS_ALL_HOTBARS_UPDATED)
-end
-
---- Register event tracking without a filter
---- @return nil
-function GFC.RegisterUnfilteredEvents()
-    EM:RegisterForEvent(GFC.name .. "UNFILTERED", EVENT_EFFECT_CHANGED, GFC.OnEffectChanged)
-    GFC:Trace(3, "Registering unfiltered complete")
-end
-
---- Unregister event tracking without a filter
---- @return nil
-function GFC.UnregisterUnfilteredEvents()
-    EM:UnregisterForEvent(GFC.name .. "UNFILTERED", EVENT_EFFECT_CHANGED)
-    GFC:Trace(3, "Unregistering unfiltered complete")
+    self.trackedAbilityId = nil
 end
 
 --- Set the in combat state
 --- @param inCombat boolean True when in combat
 --- @return nil
 function GFC:SetInCombat(inCombat)
+    self:Trace(2, "In Combat: <<1>>", tostring(inCombat))
+
     self.isInCombat = inCombat
-    self:Trace(2, "In Combat: <<1>>", inCombat)
-
-    if not self.preferences.hideOutOfCombat then return end
-
-    if inCombat then
-        self:AddSceneFragments()
-    else
-        self:RemoveSceneFragments()
-    end
 end
 
 --- Get the current number of stacks active
 --- @return integer stackCount Current number of stacks
 function GFC:GetBuffStacks()
     for i = 1, GetNumBuffs("player") do
+        -- Fix diagnostic for stackCount type
         local _, _, _, _, stackCount --[[ @as integer ]], _, _, _, _, _, abilityId = GetUnitBuffInfo("player", i)
         for ability, stackId in pairs(GFC.skills) do
             local abilityName = GetAbilityName(ability)
@@ -203,13 +245,22 @@ function GFC:OnPlayerChanged()
 
     local slotted = self:CheckSkillSlotted()
 
+    self.skillSlotted = slotted
+
     if slotted then
-        local stacks = self:GetBuffStacks()
-        self.skillSlotted = true
-        self.currentStacks = stacks
+        self:Enable()
+        self.currentStacks = self:GetBuffStacks()
     else
-        self.skillSlotted = false
+        self:Disable()
         self.currentStacks = 0
+    end
+
+    if self.preferences.hideOutOfCombat and not self.isInCombat then
+        self:RemoveSceneFragments()
+    elseif not slotted and not self.preferences.alwaysShow then
+        self:RemoveSceneFragments()
+    else
+        self:AddSceneFragments()
     end
 
     self:UpdateUI()
@@ -228,12 +279,39 @@ function GFC.OnEffectChanged(_, changeType, _, effectName, _, _, _, stackCount, 
     GFC:Trace(2, "Stack for Ability ID: " .. effectAbilityId)
 
     if stackCount == 5 and changeType == EFFECT_RESULT_FADED then
-        GFC:Trace(2, "Used proc: " .. effectName .. " (" .. effectAbilityId .. ") with " .. stackCount .. " stacks")
+        GFC:Trace(2, "Used proc: <<1>> (<<2>>) with stacks <<3>>", effectName, effectAbilityId, stackCount)
         GFC.currentStacks = 0
     else
-        GFC:Trace(1, "Stack #" .. GFC.currentStacks)
+        GFC:Trace(1, "Stack #<<1>> (effect changed)", GFC.currentStacks)
         GFC.currentStacks = stackCount
     end
 
     GFC:UpdateUI()
+end
+
+--- Enable tracking
+--- @return nil
+function GFC:Enable()
+    self:RegisterTrackingEvents()
+end
+
+--- Disable tracking
+--- @return nil
+function GFC:Disable()
+    self:UnregisterTrackingEvents()
+    self:UnregisterStacks()
+end
+
+--- Register event tracking without a filter
+--- @return nil
+function GFC.RegisterUnfilteredEvents()
+    EM:RegisterForEvent(GFC.name .. "UNFILTERED", EVENT_EFFECT_CHANGED, GFC.OnEffectChanged)
+    GFC:Trace(3, "Registering unfiltered complete")
+end
+
+--- Unregister event tracking without a filter
+--- @return nil
+function GFC.UnregisterUnfilteredEvents()
+    EM:UnregisterForEvent(GFC.name .. "UNFILTERED", EVENT_EFFECT_CHANGED)
+    GFC:Trace(3, "Unregistering unfiltered complete")
 end

@@ -9,6 +9,7 @@
 local LAM = LibAddonMenu2
 local GFC = GFC
 
+--- @type table<string, any> LibAddonMenu2 panel data
 local panelData = {
     type               = "panel",
     name               = "Grim Focus Counter",
@@ -16,6 +17,7 @@ local panelData = {
     author             = "g4rr3t",
     version            = GFC.version,
     registerForRefresh = true,
+    slashCommand       = "/gfc",
 }
 
 -- -----------------------------------------------------------------------------
@@ -28,13 +30,7 @@ local panelData = {
 local function setHideOutOfCombat(hide)
     GFC.preferences.hideOutOfCombat = hide
 
-    if hide then
-        GFC:RegisterCombatEvent()
-        GFC:OnPlayerChanged()
-    else
-        GFC:UnregisterCombatEvent()
-        GFC:AddSceneFragments()
-    end
+    GFC:OnPlayerChanged()
 end
 
 --- Get the hideOutOfCombat setting
@@ -46,7 +42,7 @@ end
 -- Locked the locked state
 --- @param control any Button control to update text label for
 --- @return nil
-function ToggleLocked(control)
+local function toggleLocked(control)
     GFC.preferences.unlocked = not GFC.preferences.unlocked
     GFC.GFCContainer:SetMovable(GFC.preferences.unlocked)
     if GFC.preferences.unlocked then
@@ -59,13 +55,13 @@ end
 --- Force show the display
 --- @param control any Button control to update text label for
 --- @return nil
-function ForceShow(control)
+local function forceShow(control)
     GFC.ForceShow = not GFC.ForceShow
     if GFC.ForceShow then
         control:SetText("Hide")
         GFC.HUDHidden = false
         GFC.GFCContainer:SetHidden(false)
-        GFC.UpdateStacks(5)
+        GFC:UpdateStacks(5)
     else
         control:SetText("Show")
         GFC.HUDHidden = true
@@ -77,7 +73,7 @@ end
 --- Update the selected texture
 --- @param value string Texture picker selection value
 --- @return nil
-function SetTexture(value)
+local function setTexture(value)
     local selectedTexture = nil
 
     -- Search texture array
@@ -94,13 +90,13 @@ function SetTexture(value)
         GFC.GFCTexture:SetTexture(GFC.TEXTURE_VARIANTS[selectedTexture].asset)
         GFC.preferences.selectedTexture = selectedTexture
     else
-        d('[GFC] Could not load specified texture!')
+        GFC:Trace(0, 'Could not load specified texture!')
     end
 end
 
 --- Get the selected texture's picker option
 --- @return string value Picker texture
-function GetTexture()
+local function getTexture()
     local selectedTexture = GFC.preferences.selectedTexture
     return GFC.TEXTURE_VARIANTS[selectedTexture].picker
 end
@@ -108,7 +104,7 @@ end
 --- Set the display size
 --- @param value integer Display size
 --- @return nil
-function SetSize(value)
+local function setSize(value)
     GFC.preferences.size = value
     GFC.GFCContainer:SetDimensions(value, value)
     GFC.GFCTexture:SetDimensions(value, value)
@@ -116,20 +112,20 @@ end
 
 --- Get the display size
 --- @return integer
-function GetSize()
+local function getSize()
     return GFC.preferences.size
 end
 
 --- Set the showEmptyStacks value
 --- @param value boolean True to enable showing empty (zero) stacks
 --- @return nil
-function SetZeroStacks(value)
+local function setZeroStacks(value)
     GFC.preferences.showEmptyStacks = value
 end
 
 --- Get the showEmptyStacks value
 --- @return boolean value True to show empty (zero) stacks
-function GetZeroStacks()
+local function getZeroStacks()
     return GFC.preferences.showEmptyStacks
 end
 
@@ -137,15 +133,15 @@ end
 --- @param overlayType string The overlay type
 --- @param value boolean True to enable color overlay for the given overlay type
 --- @return nil
-function SetColorOverlay(overlayType, value)
+local function setColorOverlay(overlayType, value)
     GFC.preferences.overlay[overlayType] = value
-    GFC.SetSkillColorOverlay('default')
+    GFC:SetSkillColorOverlay('default')
 end
 
 --- Get the color overlay for a given type
 --- @param overlayType string The overlay type
 --- @return boolean value True when color overlay is enabled for the given overlay type
-function GetColorOverlay(overlayType)
+local function getColorOverlay(overlayType)
     return GFC.preferences.overlay[overlayType]
 end
 
@@ -156,20 +152,20 @@ end
 --- @param b integer Blue value
 --- @param a integer Alpha value
 --- @return nil
-function SetColor(overlayType, r, g, b, a)
+local function setColor(overlayType, r, g, b, a)
     GFC.preferences.colors[overlayType] = {
         r = r,
         g = g,
         b = b,
         a = a,
     }
-    GFC.SetSkillColorOverlay('default')
+    GFC:SetSkillColorOverlay('default')
 end
 
 --- Get color values for the given overlay type
 --- @param overlayType string The overlay type to get color values for
 --- @return integer r, integer g, integer b, integer a
-function GetColor(overlayType)
+local function getColor(overlayType)
     return GFC.preferences.colors[overlayType].r,
         GFC.preferences.colors[overlayType].g,
         GFC.preferences.colors[overlayType].b,
@@ -179,33 +175,28 @@ end
 --- Set if the display should fade when inactive
 --- @param value boolean True to enable skill fade
 --- @return nil
-function SetFade(value)
-    -- Note: To avoid having to change alpha every time,
-    -- even if we never wanted to fade in the first place,
-    -- turning OFF the option must first SetSkillFade(false)
-    -- before setting preferences.fadeInactive to false.
-    -- Otherwise we may get stuck in a faded state.
-    GFC.SetSkillFade(value)
+local function setFade(value)
     GFC.preferences.fadeInactive = value
+    GFC:UpdateUI()
 end
 
 --- Get the fadeInactive value
 --- @return boolean fadeInactive True to fade when inactive
-function GetFade()
+local function getFade()
     return GFC.preferences.fadeInactive
 end
 
 --- Set the amount to fade when inactive
 --- @param value integer Amount to fade
 --- @return nil
-function SetFadeAmount(value)
+local function setFadeAmount(value)
     GFC.preferences.fadeAmount = value
-    GFC.SetSkillFade()
+    GFC:UpdateUI()
 end
 
 --- Get the amount to fade when inactive
 --- @return integer value Amount to fade
-function GetFadeAmount()
+local function getFadeAmount()
     return GFC.preferences.fadeAmount
 end
 
@@ -222,6 +213,25 @@ local function getLockReticle()
     return GFC.preferences.lockedToReticle
 end
 
+--- Set if the display should always show
+--- @param value boolean True to always show
+--- @return nil
+local function setAlwaysShow(value)
+    GFC.preferences.alwaysShow = value
+    if not value then
+        setFade(value)
+    end
+
+    GFC:OnPlayerChanged()
+end
+
+--- Get the always show setting
+--- @return boolean value True to always show
+local function getAlwaysShow()
+    return GFC.preferences.alwaysShow
+end
+
+--- @type table<string, any>[] LibAddonMenu options
 local optionsTable = {
     {
         type = "header",
@@ -232,14 +242,14 @@ local optionsTable = {
         type = "button",
         name = function() if GFC.preferences.unlocked then return "Lock" else return "Unlock" end end,
         tooltip = "Toggle lock/unlock state of counter display for repositioning.",
-        func = ToggleLocked,
+        func = toggleLocked,
         width = "half",
     },
     {
         type = "button",
         name = function() if GFC.ForceShow then return "Hide" else return "Show" end end,
         tooltip = "Force show for position or previewing display settings.",
-        func = ForceShow,
+        func = forceShow,
         width = "half",
     },
     {
@@ -279,8 +289,8 @@ local optionsTable = {
             "GrimFocusCounter/art/textures/Picker-CH01_red.dds",
             "GrimFocusCounter/art/textures/Picker-CH01_BW.dds",
         },
-        getFunc = GetTexture,
-        setFunc = SetTexture,
+        getFunc = getTexture,
+        setFunc = setTexture,
         tooltip = "Style of counter display.",
         choicesTooltips = {
             "Color Squares",
@@ -306,17 +316,17 @@ local optionsTable = {
         min = 0,
         max = 500,
         step = 5,
-        getFunc = GetSize,
-        setFunc = SetSize,
+        getFunc = getSize,
+        setFunc = setSize,
         width = "full",
         default = 40,
     },
     {
         type = "checkbox",
         name = "Show Zero Stacks",
-        tooltip = "Show when skill is active but no stacks tracked.",
-        getFunc = GetZeroStacks,
-        setFunc = SetZeroStacks,
+        tooltip = "Show when skill is slotted but no stacks tracked.",
+        getFunc = getZeroStacks,
+        setFunc = setZeroStacks,
         width = "full",
     },
     {
@@ -331,21 +341,30 @@ local optionsTable = {
     },
     {
         type = "checkbox",
-        name = "Fade on Skill Inactive",
-        tooltip = "Lower opacity when stacks exist and in combat, but buff has expired.",
-        getFunc = GetFade,
-        setFunc = SetFade,
+        name = "Always Show",
+        tooltip = "Always show the display even if the skill is not slotted",
+        getFunc = getAlwaysShow,
+        setFunc = setAlwaysShow,
         width = "full",
+    },
+    {
+        type = "checkbox",
+        name = "Fade when Not Slotted",
+        tooltip = "Lower opacity when the skill is not slotted",
+        getFunc = getFade,
+        setFunc = setFade,
+        width = "full",
+        disabled = function() return not getAlwaysShow() end,
     },
     {
         type = "slider",
         name = "Fade Amount",
-        tooltip = "Opacity of inactive skill with counted stacks",
+        tooltip = "Opacity of display when the skill is not slotted",
         min = 0,
         max = 100,
-        disabled = function() return not GetFade() end,
-        getFunc = GetFadeAmount,
-        setFunc = SetFadeAmount,
+        disabled = function() return not getFade() or not getAlwaysShow() end,
+        getFunc = getFadeAmount,
+        setFunc = setFadeAmount,
         width = "full",
         default = 90,
     },
@@ -353,61 +372,61 @@ local optionsTable = {
         type = "checkbox",
         name = "Color Overlay: Default",
         tooltip = "Overlay the indicator with a color. Works better on some textures than others.",
-        getFunc = function() return GetColorOverlay('default') end,
-        setFunc = function(value) SetColorOverlay('default', value) end,
+        getFunc = function() return getColorOverlay('default') end,
+        setFunc = function(value) setColorOverlay('default', value) end,
         width = "full",
     },
     {
         type = "colorpicker",
-        disabled = function() return not GetColorOverlay('default') end,
+        disabled = function() return not getColorOverlay('default') end,
         tooltip = "Color used for Color Overlay: Default",
-        getFunc = function() return GetColor('default') end,
-        setFunc = function(r, g, b, a) SetColor('default', r, g, b, a) end,
+        getFunc = function() return getColor('default') end,
+        setFunc = function(r, g, b, a) setColor('default', r, g, b, a) end,
     },
     {
         type = "checkbox",
         name = "Color Overlay: Inactive",
-        tooltip = "When skill is inactive, overlay the indicator with a color.",
-        getFunc = function() return GetColorOverlay('inactive') end,
-        setFunc = function(value) SetColorOverlay('inactive', value) end,
+        tooltip = "When skill is not slotted, overlay the indicator with a color.",
+        getFunc = function() return getColorOverlay('inactive') end,
+        setFunc = function(value) setColorOverlay('inactive', value) end,
         width = "full",
     },
     {
         type = "colorpicker",
-        disabled = function() return not GetColorOverlay('inactive') end,
+        disabled = function() return not getColorOverlay('inactive') end,
         tooltip = "Color used for Color Overlay: Inactive",
-        getFunc = function() return GetColor('inactive') end,
-        setFunc = function(r, g, b, a) SetColor('inactive', r, g, b, a) end,
+        getFunc = function() return getColor('inactive') end,
+        setFunc = function(r, g, b, a) setColor('inactive', r, g, b, a) end,
     },
     {
         type = "checkbox",
         name = "Color Overlay: 4 Stacks",
         tooltip = "Differentiate the significance of 4 stacks to prepare to fire bow proc.",
-        getFunc = function() return GetColorOverlay('four') end,
-        setFunc = function(value) SetColorOverlay('four', value) end,
+        getFunc = function() return getColorOverlay('four') end,
+        setFunc = function(value) setColorOverlay('four', value) end,
         width = "full",
     },
     {
         type = "colorpicker",
-        disabled = function() return not GetColorOverlay('four') end,
+        disabled = function() return not getColorOverlay('four') end,
         tooltip = "Color used for Color Overlay: Proc",
-        getFunc = function() return GetColor('four') end,
-        setFunc = function(r, g, b, a) SetColor('four', r, g, b, a) end,
+        getFunc = function() return getColor('four') end,
+        setFunc = function(r, g, b, a) setColor('four', r, g, b, a) end,
     },
     {
         type = "checkbox",
         name = "Color Overlay: Proc",
         tooltip = "When a proc is active and spectral bow is ready to be fired, overlay the indicator with a color.",
-        getFunc = function() return GetColorOverlay('proc') end,
-        setFunc = function(value) SetColorOverlay('proc', value) end,
+        getFunc = function() return getColorOverlay('proc') end,
+        setFunc = function(value) setColorOverlay('proc', value) end,
         width = "full",
     },
     {
         type = "colorpicker",
-        disabled = function() return not GetColorOverlay('proc') end,
+        disabled = function() return not getColorOverlay('proc') end,
         tooltip = "Color used for Color Overlay: Proc",
-        getFunc = function() return GetColor('proc') end,
-        setFunc = function(r, g, b, a) SetColor('proc', r, g, b, a) end,
+        getFunc = function() return getColor('proc') end,
+        setFunc = function(r, g, b, a) setColor('proc', r, g, b, a) end,
     },
     {
         type = "submenu",
